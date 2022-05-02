@@ -5,26 +5,31 @@ import java.util.*;
 public class MemoryManager implements IMemoryManager {
 
     //todo 变量内存控制
+    private static final int MEMORY_SIZE = 1 << 20;     // 内存大小，1MB
+    private static final int HEAP_SIZE_MAX = 8 << 10;  // 堆最大尺寸，8KB
+    private static final int VAR_ID_MAX = 1000;
+
+    private int seqForNewPro;                       // 申请内存时找到的合适空闲分区编号
     private final List<Partition> proPartitions;    // 已被分配的内存分区表
     private final List<Partition> idlePartitions;   // 空闲内存分区表
-    private final HashMap<Integer, ArrayList<Integer>> proVarMap;         // key:pid  value:varId列表
-    private final HashMap<Integer, VarPartition> varInfoMap;              // 变量标识与变量信息的一一映射
-    private int partitionSeq;                       // 申请内存时找到的合适空闲分区编号
-    private static final int VAR_ID_MAX = 1000;
+
+    private int curHeapSize;                        // 当前堆大小
     private int varIdSeq;                           // 下一个被分配的varId，[1,1000]
-    private final Set<Integer> varIdSet;              // 活跃的变量表示集合
+    private final HashMap<Integer, ArrayList<Integer>> proVarMap;    // key:pid  value:varId列表
+    private final HashMap<Integer, VarPartition> heap;              // 堆：变量标识与变量信息的一一映射
+    private final Set<Integer> varIdSet;            // 活跃的变量表示集合
 
     public MemoryManager() {
-        this.varIdSet = new HashSet<>();
+        this.seqForNewPro = -1;
         this.proPartitions = new ArrayList<>();
         this.idlePartitions = new ArrayList<>();
+        this.idlePartitions.add(new Partition(-1, 0, MEMORY_SIZE));// 程序内存总大小初始化为1MB
 
-        // 程序内存总大小初始化为1MB
-        this.idlePartitions.add(new Partition(-1, 0, 1 << 20));
-        this.partitionSeq = -1;
-        this.proVarMap = new HashMap<>();
-        this.varInfoMap = new HashMap<>();
+        curHeapSize = 0;
         varIdSeq = 0;
+        this.proVarMap = new HashMap<>();
+        this.heap = new HashMap<>();
+        this.varIdSet = new HashSet<>();
     }
 
     @Override
@@ -32,7 +37,7 @@ public class MemoryManager implements IMemoryManager {
         int seq = 0;
         for (Partition part : idlePartitions) {
             if (part.getSize() > pSize) {
-                partitionSeq = seq;
+                seqForNewPro = seq;
                 return true;
             }
             seq++;
@@ -44,13 +49,13 @@ public class MemoryManager implements IMemoryManager {
     @Override
     public void memoryAllocate(int pid, int proSize) {
         try {
-            Partition parAllocated = idlePartitions.get(partitionSeq);
+            Partition parAllocated = idlePartitions.get(seqForNewPro);
             int parFir = parAllocated.getFirAddress();
             int parSize = parAllocated.getSize();
             proPartitions.add(new Partition(pid, parFir, proSize));
-            idlePartitions.get(partitionSeq).setFirAddress(parFir + proSize);
-            idlePartitions.get(partitionSeq).setSize(parSize - proSize);
-            partitionSeq = -1;
+            idlePartitions.get(seqForNewPro).setFirAddress(parFir + proSize);
+            idlePartitions.get(seqForNewPro).setSize(parSize - proSize);
+            seqForNewPro = -1;
             System.out.println("Succeed in allocating memory for process " + pid + ".");
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
@@ -83,6 +88,11 @@ public class MemoryManager implements IMemoryManager {
 
     @Override
     public int varDeclare(int pid, String varType, int size) {
+        if (curHeapSize + size > HEAP_SIZE_MAX) {
+            System.out.println("\u0001[31m" + "The rest heap space is not enough!!!" + "\u0001[0m");
+            return -1;
+        }
+
         // 获取varID
         varIdSeq++;
         if (varIdSeq > VAR_ID_MAX) {
@@ -95,7 +105,7 @@ public class MemoryManager implements IMemoryManager {
             }
             // 当前活跃变量个数超过上限
             if (i == setSize) {
-                System.out.println("\u0001[31m" + "The number of running variables is over!" + "\u0001[0m");
+                System.out.println("\u0001[31m" + "The number of running variables is over!!!" + "\u0001[0m");
                 return -1;
             }
         }
@@ -109,7 +119,8 @@ public class MemoryManager implements IMemoryManager {
         }
         // 保存变量基本信息
         VarPartition varPar = new VarPartition(0, size, varType);
-        varInfoMap.put(varIdSeq, varPar);
+        heap.put(varIdSeq, varPar);
+        curHeapSize += size;
         System.out.println("Increase a variable for process " + pid + ". VarId is " + varIdSeq + ".");
         return varIdSeq;
     }
@@ -117,7 +128,7 @@ public class MemoryManager implements IMemoryManager {
     @Override
     public int varReadInt(int varID) {
         try {
-            String val = varInfoMap.get(varID).getValue();
+            String val = heap.get(varID).getValue();
             return Integer.parseInt(val);
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -129,7 +140,7 @@ public class MemoryManager implements IMemoryManager {
     @Override
     public String varReadString(int varID) {
         try {
-            return varInfoMap.get(varID).getValue();
+            return heap.get(varID).getValue();
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("\u0001[33m" + "\tCannot read a variable which doesn't exist!" + "\u0001[0m");
@@ -140,7 +151,7 @@ public class MemoryManager implements IMemoryManager {
     @Override
     public void varWriteInt(int varID, int varValue) {
         try {
-            varInfoMap.get(varID).setValue(Integer.toString(varValue));
+            heap.get(varID).setValue(Integer.toString(varValue));
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("\u0001[33m" + "\tCannot write a variable which doesn't exist!" + "\u0001[0m");
@@ -150,7 +161,7 @@ public class MemoryManager implements IMemoryManager {
     @Override
     public void varWriteString(int varID, String varValue) {
         try {
-            varInfoMap.get(varID).setValue(varValue);
+            heap.get(varID).setValue(varValue);
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("\u0001[33m" + "\tCannot write a variable which doesn't exist!" + "\u0001[0m");
@@ -230,7 +241,8 @@ public class MemoryManager implements IMemoryManager {
      */
     private void varFree(int pid) {
         for (Integer varId : proVarMap.get(pid)) {
-            varInfoMap.remove(varId);
+            curHeapSize -= heap.get(varId).getSize();
+            heap.remove(varId);
             varIdSet.remove(varId);
         }
         proVarMap.remove(pid);
