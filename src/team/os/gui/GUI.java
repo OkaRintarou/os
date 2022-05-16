@@ -1,10 +1,8 @@
 package team.os.gui;
 
 //import com.sun.javafx.collections.ListListenerHelper;
-import team.os.global.Global;
 
 import java.util.ArrayList;
-import java.util.Timer;
 import java.util.TimerTask;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -23,6 +21,9 @@ public class GUI extends JFrame {
 
     String file;//文件名
     String filePath;//文件路径
+    int pid_DEL;//删除进程的pid
+    int count_cyc;//周期数
+    int count_cor;//核心数
 
     JPanel panel = new JPanel();//包含按钮以及文本框等信息的面板容器
 
@@ -93,6 +94,10 @@ public class GUI extends JFrame {
         list_IMP();
     }
 
+    public void brokerMethod(){
+        JOptionPane.showInputDialog(null, "请输入：", "brokerMethod", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     protected void createProcess(ActionEvent e) {
         DefaultTableModel tableModel = (DefaultTableModel) tableProcess.getModel();
         tableModel.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态"});
@@ -100,6 +105,7 @@ public class GUI extends JFrame {
         filePath = JOptionPane.showInputDialog(null, "请输入路径：", "路径", JOptionPane.INFORMATION_MESSAGE);
         if ((null != file && !"".equals(file)) && (null != filePath && !"".equals(filePath))) {
             tableModel.addRow(new Object[]{"进程" + i, "lxh", "TRUE"});
+            list_Process.add(new KeyValuePair_Process(i, "lxh", "true"));
             i++;
         } else {
             JOptionPane.showMessageDialog(panel, "输入错误！请重新输入。", "警告", 2);
@@ -110,38 +116,69 @@ public class GUI extends JFrame {
 
     protected void deleteProcess(ActionEvent e) {
         DefaultTableModel model = (DefaultTableModel) tableProcess.getModel();    //获得表格模型
-        int[] selectedRows = tableProcess.getSelectedRows();
-        for (int i = 0; i < selectedRows.length; i++) {
-            model.removeRow(selectedRows[i]);
+        pid_DEL = Integer.parseInt(JOptionPane.showInputDialog(null,"请输入进程pid：","进程pid",JOptionPane.INFORMATION_MESSAGE));
+        if(list_Process.size()>0){
+            for (int j = 0; j < list_Process.size(); j++) {
+                if(pid_DEL == list_Process.get(j).pid){
+                    list_Process.remove(j);
+                    model.removeRow(j);
+                    break;
+                }
+                else if(j ==list_Process.size()-1){
+                    JOptionPane.showMessageDialog(panel, "未找到所输入pid所对应的进程", "警告", 2);
+                }
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(panel, "没有正在运行的进程", "警告", 2);
         }
         tableProcess.setModel(model);
     }
 
+    protected void actionProcess(ActionEvent e){
+        count_cyc= Integer.parseInt(JOptionPane.showInputDialog(null, "请输入周期数：", "周期数", JOptionPane.INFORMATION_MESSAGE));
+        count_cor= Integer.parseInt(JOptionPane.showInputDialog(null, "请输入核心数：", "核心数", JOptionPane.INFORMATION_MESSAGE));
+    }
+
+    public JButton buttonCRE;
+    public JButton buttonDEL;
+    public JButton buttonACT;
     public JTextArea textArea;
+    public JScrollPane scroll;
     void button_text() {
         textArea = new JTextArea("textArea",7,140); //设置文本框
+        scroll = new JScrollPane(textArea);
         textArea.setLineWrap(true);
         textArea.setForeground(Color.BLACK);
         textArea.setFont(new Font("宋体",Font.BOLD,16));
         textArea.setBackground(Color.WHITE);
         textArea.setText("");
         textArea.setEditable(false);
-        JButton buttonCRE = new JButton("CREATE");
 
+        buttonCRE = new JButton("CREATE");
         buttonCRE.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 createProcess(e);
             }
         });
-        JButton buttonDEL = new JButton("DELETE");
+
+        buttonDEL = new JButton("DELETE");
         buttonDEL.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 deleteProcess(e);
             }
         });
-        panel.add(textArea);
+
+        buttonACT = new JButton(("ACTION"));
+        buttonACT.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                 actionProcess(e);
+            }
+        });
+        panel.add(scroll);
         panel.add(buttonCRE);
         panel.add(buttonDEL);
+        panel.add(buttonACT);
     }
 
     void list_IMP() {
@@ -190,7 +227,7 @@ public class GUI extends JFrame {
     }
 
     void list_data() {
-        list_Process.add(new KeyValuePair_Process(1, "lxh", "true"));
+
         list_Memory.add(new KeyValuePair_Memory("1", "111", "510"));
         list_IO.add(new KeyValuePair_IO("鼠标", "true"));
     }
