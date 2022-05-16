@@ -76,8 +76,8 @@ public class GUI extends JFrame {
         return list;
     }
     public void print(String msg)  {
-        // TODO: 2022/5/9
-        System.out.println("From GUI: "+msg);
+        textArea.append(msg);
+        textArea.append("\n");
     }
     public GUI() {
         list_data();
@@ -117,12 +117,15 @@ public class GUI extends JFrame {
         tableProcess.setModel(model);
     }
 
+    public JTextArea textArea;
     void button_text() {
-        JTextArea textArea = new JTextArea("textArea",7,140); //设置文本框
+        textArea = new JTextArea("textArea",7,140); //设置文本框
         textArea.setLineWrap(true);
         textArea.setForeground(Color.BLACK);
         textArea.setFont(new Font("宋体",Font.BOLD,16));
         textArea.setBackground(Color.WHITE);
+        textArea.setText("");
+        textArea.setEditable(false);
         JButton buttonCRE = new JButton("CREATE");
 
         buttonCRE.addActionListener(new ActionListener() {

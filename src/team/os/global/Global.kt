@@ -5,7 +5,6 @@ import team.os.gui.GUI
 import team.os.instruction.GlobalModules
 import team.os.instruction.InsSetFactory
 import team.os.interruption.InterruptionManagement
-import team.os.io.IOFacility
 import team.os.io.IOFacilityManagement
 import team.os.memoryManager.MemoryManager
 import team.os.process.ProcessManagement
@@ -27,4 +26,11 @@ object Global {
         mm,
         io
     ))
+
+    fun createProcess(name:String,filePath:String){
+        pm.createProcess(name,filePath)
+    }
+    fun killProcess(name:String){
+        pm.terminateProcess(TODO())
+    }
 }
