@@ -1,6 +1,7 @@
 package team.os.instruction
 
 import team.os.global.Global
+import team.os.interruption.InterruptionManagement
 import team.os.process.Process.PCB
 
 /**
@@ -66,7 +67,7 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
     class Block(pcb:PCB,gb:GlobalModules,private val cycle:Int):Instruction(pcb,gb){
         override fun invoke() {
             gb.pm.blockProcess(cycle)
-            //TODO
+            gb.im.generateInterruption(InterruptionManagement.InterruptId.BLOCK_INTERRUPTION,pcb.name, cycle)
         }
     }
 

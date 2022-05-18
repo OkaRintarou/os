@@ -25,7 +25,8 @@ object Global {
             pm,
             fs,
             mm,
-            io
+            io,
+            im
         )
     )
 

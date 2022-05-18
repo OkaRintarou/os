@@ -1,7 +1,7 @@
 package team.os.instruction
 
 import team.os.fileSystem.IFileSystem
-import team.os.io.IOFacility
+import team.os.interruption.InterruptionManagement
 import team.os.io.IOFacilityManagement
 import team.os.memoryManager.IMemoryManager
 import team.os.process.ProcessManagement
@@ -32,12 +32,13 @@ class GlobalModules (
     val pm: ProcessManagement,
     val fs: IFileSystem,
     val mm: IMemoryManager,
-    val io: IOFacilityManagement
+    val io: IOFacilityManagement,
+    val im:InterruptionManagement
 ){
     fun copy()=GlobalModules(
         HashMap(),
         HashMap(),
         HashMap(),
-        pm,fs,mm,io
+        pm,fs,mm,io,im
     )
 }
