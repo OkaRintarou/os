@@ -32,23 +32,29 @@ public class GUI extends JFrame {
         public int pid;
         public String name;
         public String state;
+        public int ID_now;
+        public int all_ins;
 
-        public KeyValuePair_Process(int first, String second, String third) {
+        public KeyValuePair_Process(int first, String second, String third,int fourth,int fifth) {
             pid = first;
             name = second;
             state = third;
+            ID_now = fourth;
+            all_ins = fifth;
         }
     }//进程list的格式
 
     public static class KeyValuePair_Memory {
-        public String id;
-        public String address;
-        public String size;
+        public String name;
+        public String type;
+        public int size;
+        public String count;
 
-        public KeyValuePair_Memory(String first, String second, String third) {
-            id = first;
-            address = second;
+        public KeyValuePair_Memory(String first, String second, int third, String fourth) {
+            name = first;
+            type = second;
             size = third;
+            count = fourth;
         }
     }//内存list的格式
 
@@ -85,7 +91,7 @@ public class GUI extends JFrame {
         list_data();
         setTitle("Windose20"); //窗口标题
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //设置开关隐藏
-        setBounds(100, 100, 1000, 450); //设置初始大小和位置
+        setBounds(500, 300, 1000, 450); //设置初始大小和位置
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout(0, 0));
@@ -101,7 +107,7 @@ public class GUI extends JFrame {
 
     protected void createProcess(ActionEvent e) {
         DefaultTableModel tableModel = (DefaultTableModel) tableProcess.getModel();
-        tableModel.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态"});
+        tableModel.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态","当前指令序号","总指令条数"});
         createProcess_Win(tableModel);
         tableProcess.setRowHeight(30);
         tableProcess.setModel(tableModel);
@@ -250,10 +256,10 @@ public class GUI extends JFrame {
                 actionProcess(e);
             }
         });
-        panel.add(scroll);
-        panel.add(buttonCRE);
-        panel.add(buttonDEL);
-        panel.add(buttonACT);
+        panel.add(scroll,BorderLayout.NORTH);
+        panel.add(buttonCRE,BorderLayout.SOUTH);
+        panel.add(buttonDEL,BorderLayout.SOUTH);
+        panel.add(buttonACT,BorderLayout.SOUTH);
     }
 
     void list_IMP() {
@@ -279,16 +285,16 @@ public class GUI extends JFrame {
 
     private void list_Process() {
         DefaultTableModel tableModel = (DefaultTableModel) tableProcess.getModel();
-        tableModel.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态"});
-        for (KeyValuePair_Process p : list_Process) tableModel.addRow(new Object[]{p.pid, p.name, p.state});
+        tableModel.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态","当前指令序号","总指令条数"});
+        for (KeyValuePair_Process p : list_Process) tableModel.addRow(new Object[]{p.pid, p.name, p.state,p.ID_now,p.all_ins});
         tableProcess.setRowHeight(30);
         tableProcess.setModel(tableModel);
     }
 
     void list_Memory() {
         DefaultTableModel tableModel = (DefaultTableModel) tableMemory.getModel();
-        tableModel.setColumnIdentifiers(new Object[]{"进程id", "块首地址", "块大小"});
-        for (KeyValuePair_Memory p : list_Memory) tableModel.addRow(new Object[]{p.id, p.address, p.size});
+        tableModel.setColumnIdentifiers(new Object[]{"变量名","变量类型","大小","值"});
+        for (KeyValuePair_Memory p : list_Memory) tableModel.addRow(new Object[]{p.name,p.type,p.size,p.count});
         tableMemory.setRowHeight(30);
         tableMemory.setModel(tableModel);
     }
@@ -302,7 +308,7 @@ public class GUI extends JFrame {
     }
 
     void list_data() {
-        list_Memory.add(new KeyValuePair_Memory("1", "111", "510"));
+        list_Memory.add(new KeyValuePair_Memory("1", "111",510,"haha"));
         list_IO.add(new KeyValuePair_IO("鼠标", "true"));
     }
 
@@ -317,8 +323,8 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog(null, "输入错误！请重新输入。", "警告", 2);
         } else {
             Global.INSTANCE.createProcess(proName, fileName);
-            tableModel.addRow(new Object[]{"进程" + i, "lxh", "TRUE"});
-            list_Process.add(new KeyValuePair_Process(i, "lxh", "true"));
+            tableModel.addRow(new Object[]{"进程" + i, "lxh", "TRUE",i,i});
+            list_Process.add(new KeyValuePair_Process(i, "lxh", "true", i,i));
             i++;
             JOptionPane.showMessageDialog(null, "输入成功！");
             frameCRE.dispose();
