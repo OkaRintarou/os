@@ -3,6 +3,7 @@ package team.os.gui;
 //import com.sun.javafx.collections.ListListenerHelper;
 
 import team.os.global.Global;
+import team.os.process.Process;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -34,11 +35,11 @@ public class GUI extends JFrame {
     public static class KeyValuePair_Process {
         public int pid;
         public String name;
-        public String state;
+        public Process.ProcessStates state;
         public int ID_now;
         public int all_ins;
 
-        public KeyValuePair_Process(int first, String second, String third,int fourth,int fifth) {
+        public KeyValuePair_Process(int first, String second, Process.ProcessStates third,int fourth,int fifth) {
             pid = first;
             name = second;
             state = third;
@@ -328,7 +329,7 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog(null, "输入错误！请重新输入。", "警告", 2);
         } else {
             Global.INSTANCE.createProcess(proName, fileName);
-            addList_Process(iPro,"lxh","haha",iPro,iPro);
+            addList_Process(iPro,"lxh", Process.ProcessStates.READY,iPro,iPro);
             JOptionPane.showMessageDialog(null, "输入成功！");
             frameCRE.dispose();
         }
@@ -355,7 +356,7 @@ public class GUI extends JFrame {
         }
     }//删除进程窗口确定键触发器中函数
 
-     public void addList_Process(int a, String b, String c, int d, int e){
+     public void addList_Process(int a, String b, Process.ProcessStates c, int d, int e){
         list_Process.add(new KeyValuePair_Process(a,b,c,d,e));
         tableModel_Pro.addRow(new Object[]{list_Process.get(iPro -1).pid,list_Process.get(iPro -1).name,list_Process.get(iPro -1).state,list_Process.get(iPro -1).ID_now,list_Process.get(iPro -1).all_ins});
         iPro++;
@@ -370,7 +371,7 @@ public class GUI extends JFrame {
         }
     }
 
-    public void modList_Process(int a, String b, String c, int d, int e){
+    public void modList_Process(int a, String b, Process.ProcessStates c, int d, int e){
         for (int j = 0; j < list_Process.size(); j++) {
             if(a == list_Process.get(j).pid){
                 list_Process.get(j).name = b;
