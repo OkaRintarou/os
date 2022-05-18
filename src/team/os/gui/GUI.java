@@ -323,8 +323,8 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog(null, "输入错误！请重新输入。", "警告", 2);
         } else {
             Global.INSTANCE.createProcess(proName, fileName);
-            tableModel.addRow(new Object[]{"进程" + i, "lxh", "TRUE",i,i});
             list_Process.add(new KeyValuePair_Process(i, "lxh", "true", i,i));
+            tableModel.addRow(new Object[]{list_Process.get(i-1).pid,list_Process.get(i-1).name,list_Process.get(i-1).state,list_Process.get(i-1).ID_now,list_Process.get(i-1).all_ins});
             i++;
             JOptionPane.showMessageDialog(null, "输入成功！");
             frameCRE.dispose();
