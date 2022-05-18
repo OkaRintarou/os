@@ -84,6 +84,9 @@ class InstructionSet(private val fileName: String?, private val pcb: PCB, privat
      */
     private var pointer: Int = 0
 
+    fun getPointer(): Int {
+        return pointer;
+    }
     /**
      * 执行当前指令并指向下一条指令
      *
