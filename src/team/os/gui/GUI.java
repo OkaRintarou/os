@@ -221,7 +221,7 @@ public class GUI extends JFrame {
     public JScrollPane scroll;
 
     void button_text() {
-        textArea = new JTextArea("textArea", 7, 140); //设置文本框
+        textArea = new JTextArea("textArea", 7, 100); //设置文本框
         scroll = new JScrollPane(textArea);
         textArea.setLineWrap(true);
         textArea.setForeground(Color.BLACK);

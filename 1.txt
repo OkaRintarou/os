@@ -3,16 +3,8 @@ VarDeclare v2 String 10
 VarWrite v1 str String
 VarWrite v2 aaa String
 GetMsg
+VarPrint v1 String
+VarPrint v2 String
 StrCat v1 v2 v1
-VarPrint v1 String
-VarPrint v1 String
-VarPrint v1 String
-VarPrint v1 String
-VarPrint v1 String
-VarPrint v1 String
-VarPrint v1 String
-VarPrint v1 String
-VarPrint v1 String
-VarPrint v1 String
 VarPrint v1 String
 Exit
