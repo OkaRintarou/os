@@ -2,13 +2,15 @@ package team.os.gui;
 
 //import com.sun.javafx.collections.ListListenerHelper;
 
-import java.util.ArrayList;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import team.os.global.Global;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class GUI extends JFrame {
     private JPanel contentPane;//主界面
@@ -65,20 +67,20 @@ public class GUI extends JFrame {
     ArrayList<KeyValuePair_IO> list_IO = new ArrayList<KeyValuePair_IO>();//创建IO设备列表list_IO
 
 
-
-
     public ArrayList<String> getInsString() {
         // TODO: 2022/5/9
-        ArrayList<String> list=new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
         list.add("VarPrint v1 String");
         list.add("VarPrint v1 String");
         list.add("VarPrint v1 String");
         return list;
     }
-    public void print(String msg)  {
+
+    public void print(String msg) {
         textArea.append(msg);
         textArea.append("\n");
     }
+
     public GUI() {
         list_data();
         setTitle("Windose20"); //窗口标题
@@ -93,7 +95,7 @@ public class GUI extends JFrame {
         list_IMP();
     }
 
-    public void brokerMethod(){
+    public void brokerMethod() {
         JOptionPane.showInputDialog(null, "请输入：", "brokerMethod", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -111,20 +113,20 @@ public class GUI extends JFrame {
         tableProcess.setModel(model);
     }//delete button 触发器
 
-    protected void actionProcess(ActionEvent e){
+    protected void actionProcess(ActionEvent e) {
         JFrame frameACT = new JFrame("action");
         JTextField textFieldCyc = new JTextField(16);
         JTextField textFieldCor = new JTextField(16);
         JPanel jpCyc = new JPanel();
         JPanel jpCor = new JPanel();
         JPanel jpButton = new JPanel();
-        frameACT.setSize(400,200);
+        frameACT.setSize(400, 200);
         JLabel labelCyc = new JLabel("周期数");
         JLabel labelCor = new JLabel("核心数");
         JButton buttonOK = new JButton("确定");
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                action_update(frameACT,textFieldCyc,textFieldCor);
+                action_update(frameACT, textFieldCyc, textFieldCor);
             }
         });
         JButton buttonCan = new JButton("取消");
@@ -139,14 +141,14 @@ public class GUI extends JFrame {
         jpCor.add(textFieldCor);
         jpButton.add(buttonOK);
         jpButton.add(buttonCan);
-        frameACT.add(jpCyc,BorderLayout.NORTH);
-        frameACT.add(jpCor,BorderLayout.CENTER);
-        frameACT.add(jpButton,BorderLayout.SOUTH);
+        frameACT.add(jpCyc, BorderLayout.NORTH);
+        frameACT.add(jpCor, BorderLayout.CENTER);
+        frameACT.add(jpButton, BorderLayout.SOUTH);
         frameACT.setVisible(true);
         frameACT.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }//action button 触发器
 
-    public void createProcess_Win(DefaultTableModel model){
+    public void createProcess_Win(DefaultTableModel model) {
         JFrame frameCRE = new JFrame("create");
         JTextField textFieldPro = new JTextField(16);
         JTextField textFieldFile = new JTextField(16);
@@ -154,13 +156,13 @@ public class GUI extends JFrame {
         JPanel jpPro = new JPanel();
         JPanel jpFile = new JPanel();
         JPanel jpButton = new JPanel();
-        frameCRE.setSize(400,200);
+        frameCRE.setSize(400, 200);
         JLabel labelPro = new JLabel("进程名");
         JLabel labelFile = new JLabel("文件名");
         JButton buttonOK = new JButton("确定");
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                create_input(model1,frameCRE,textFieldPro,textFieldFile);
+                create_input(model1, frameCRE, textFieldPro, textFieldFile);
             }
         });
         JButton buttonCan = new JButton("取消");
@@ -175,25 +177,25 @@ public class GUI extends JFrame {
         jpFile.add(textFieldFile);
         jpButton.add(buttonOK);
         jpButton.add(buttonCan);
-        frameCRE.add(jpPro,BorderLayout.NORTH);
-        frameCRE.add(jpFile,BorderLayout.CENTER);
-        frameCRE.add(jpButton,BorderLayout.SOUTH);
+        frameCRE.add(jpPro, BorderLayout.NORTH);
+        frameCRE.add(jpFile, BorderLayout.CENTER);
+        frameCRE.add(jpButton, BorderLayout.SOUTH);
         frameCRE.setVisible(true);
         frameCRE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }//创建进程窗口
 
-    public void deleteProcess_Win(DefaultTableModel model){
+    public void deleteProcess_Win(DefaultTableModel model) {
         JFrame frameDEL = new JFrame("delete");
         JTextField textFieldPid = new JTextField(16);
         DefaultTableModel model1 = model;
         JPanel jpPid = new JPanel();
         JPanel jpButton = new JPanel();
-        frameDEL.setSize(400,200);
+        frameDEL.setSize(400, 200);
         JLabel labelPid = new JLabel("进程pid");
         JButton buttonOK = new JButton("确定");
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                delete_input(model1,frameDEL,textFieldPid);
+                delete_input(model1, frameDEL, textFieldPid);
             }
         });
         JButton buttonCan = new JButton("取消");
@@ -206,8 +208,8 @@ public class GUI extends JFrame {
         jpPid.add(textFieldPid);
         jpButton.add(buttonOK);
         jpButton.add(buttonCan);
-        frameDEL.add(jpPid,BorderLayout.NORTH);
-        frameDEL.add(jpButton,BorderLayout.SOUTH);
+        frameDEL.add(jpPid, BorderLayout.NORTH);
+        frameDEL.add(jpButton, BorderLayout.SOUTH);
         frameDEL.setVisible(true);
         frameDEL.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }//删除进程窗口
@@ -219,11 +221,11 @@ public class GUI extends JFrame {
     public JScrollPane scroll;
 
     void button_text() {
-        textArea = new JTextArea("textArea",7,140); //设置文本框
+        textArea = new JTextArea("textArea", 7, 140); //设置文本框
         scroll = new JScrollPane(textArea);
         textArea.setLineWrap(true);
         textArea.setForeground(Color.BLACK);
-        textArea.setFont(new Font("宋体",Font.BOLD,16));
+        textArea.setFont(new Font("宋体", Font.BOLD, 16));
         textArea.setBackground(Color.WHITE);
         textArea.setText("");
         textArea.setEditable(false);
@@ -245,7 +247,7 @@ public class GUI extends JFrame {
         buttonACT = new JButton(("ACTION"));
         buttonACT.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                 actionProcess(e);
+                actionProcess(e);
             }
         });
         panel.add(scroll);
@@ -304,54 +306,52 @@ public class GUI extends JFrame {
         list_IO.add(new KeyValuePair_IO("鼠标", "true"));
     }
 
-    void create_input(DefaultTableModel model,JFrame frame,JTextField text1,JTextField text2){
+    void create_input(DefaultTableModel model, JFrame frame, JTextField text1, JTextField text2) {
         JFrame frameCRE = frame;
         DefaultTableModel tableModel = model;
         JTextField textFieldPro = text1;
         JTextField textFieldFile = text2;
         proName = textFieldPro.getText();
         fileName = textFieldFile.getText();
-        if(proName.equals("")||fileName.equals("")){
+        if (proName.equals("") || fileName.equals("")) {
             JOptionPane.showMessageDialog(null, "输入错误！请重新输入。", "警告", 2);
-        }
-        else {
+        } else {
+            Global.INSTANCE.createProcess(proName, fileName);
             tableModel.addRow(new Object[]{"进程" + i, "lxh", "TRUE"});
             list_Process.add(new KeyValuePair_Process(i, "lxh", "true"));
             i++;
-            JOptionPane.showMessageDialog(null,"输入成功！");
+            JOptionPane.showMessageDialog(null, "输入成功！");
             frameCRE.dispose();
         }
     }//创建进程窗口确定键触发器中函数
 
-    void delete_input(DefaultTableModel model,JFrame frame,JTextField text1){
+    void delete_input(DefaultTableModel model, JFrame frame, JTextField text1) {
         JFrame frameDEL = frame;
         DefaultTableModel tableModel = model;
         JTextField textFieldPid = text1;
         pid_DEL = Integer.parseInt(textFieldPid.getText());
-        if(list_Process.size()>0){
+        if (list_Process.size() > 0) {
             for (int j = 0; j < list_Process.size(); j++) {
-                if(pid_DEL == list_Process.get(j).pid){
+                if (pid_DEL == list_Process.get(j).pid) {
+                    Global.INSTANCE.killProcess(pid_DEL);
                     list_Process.remove(j);
                     model.removeRow(j);
-                    JOptionPane.showMessageDialog(panel,"删除进程成功。");
+                    JOptionPane.showMessageDialog(panel, "删除进程成功。");
                     break;
-                }
-                else if(j ==list_Process.size()-1){
+                } else if (j == list_Process.size() - 1) {
                     JOptionPane.showMessageDialog(panel, "未找到所输入pid所对应的进程！", "警告", 2);
                 }
             }
-        }
-        else{
+        } else {
             JOptionPane.showMessageDialog(panel, "没有正在运行的进程！", "警告", 2);
         }
     }//删除进程窗口确定键触发器中函数
 
-    void action_update(JFrame frame,JTextField text1,JTextField text2){
+    void action_update(JFrame frame, JTextField text1, JTextField text2) {
         JFrame frameACT = frame;
-        JTextField textFieldCyc = text1;
-        JTextField textFieldCor = text2;
-        count_cyc = Integer.parseInt(textFieldCyc.getText());
-        count_cor = Integer.parseInt(textFieldCor.getText());
-        //TODO: 2022/5/17
+        count_cyc = Integer.parseInt(text1.getText());
+        count_cor = Integer.parseInt(text2.getText());
+        Global.INSTANCE.exec(count_cyc, count_cor);
+        //TODO: 后续应该更新表格
     }//执行窗口确定键触发器中函数
 }

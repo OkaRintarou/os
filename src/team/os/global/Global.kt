@@ -11,26 +11,34 @@ import team.os.process.ProcessManagement
 
 
 object Global {
-    val fs:FileSystem= FileSystem()
+    val fs: FileSystem = FileSystem()
     val gui: GUI = GUI()
-    val im:InterruptionManagement=InterruptionManagement.getInstance()// TODO: 2022/5/9 没完成
-    val io:IOFacilityManagement=IOFacilityManagement()
-    val mm:MemoryManager=MemoryManager()
-    val pm: ProcessManagement =ProcessManagement.getInstance()
-    val insSetFactory:InsSetFactory = InsSetFactory(GlobalModules(
-        hashMapOf(),
-        hashMapOf(),
-        hashMapOf(),
-        pm,
-        fs,
-        mm,
-        io
-    ))
+    val im: InterruptionManagement = InterruptionManagement.getInstance()
+    val io: IOFacilityManagement = IOFacilityManagement()
+    val mm: MemoryManager = MemoryManager()
+    val pm: ProcessManagement = ProcessManagement.getInstance()
+    val insSetFactory: InsSetFactory = InsSetFactory(
+        GlobalModules(
+            hashMapOf(),
+            hashMapOf(),
+            hashMapOf(),
+            pm,
+            fs,
+            mm,
+            io
+        )
+    )
 
-    fun createProcess(name:String,filePath:String){
-        pm.createProcess(name,filePath)
+    fun createProcess(name: String, filePath: String) {
+        pm.createProcess(name, filePath)
     }
-    fun killProcess(name:String){
-        pm.terminateProcess(TODO())
+
+    fun killProcess(pid: Int) {
+        pm.terminateProcess(pid)
+    }
+
+    fun exec(cycle: Int, core: Int) {
+        for (i in 0 until cycle)
+            pm.singleRoundExecution(core)
     }
 }

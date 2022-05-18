@@ -71,32 +71,30 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
 
     /**
      * 申请外设
-     * @property name 外设名称
-     * @property size 申请的传输字节数
+     * @property type 外设类型
      *
      * @param pcb PCB
      */
-    class HwAccess(pcb: PCB, gb: GlobalModules, private val name: String, private val size: Int,private val varName:String) : Instruction(pcb, gb) {
+    class HwAccess(pcb: PCB, gb: GlobalModules, private val type: String,private val varName:String,private val taskID:String) : Instruction(pcb, gb) {
         override fun invoke() {
             VarPrint(pcb,gb,varName,"String",false)()
             val content=gb.tmpStrMap[varName]?:""
-            val result = gb.io.IOFacilityRequest(name, size,content)
-            val num = result[0]
+            val result = gb.io.IOFacilityRequest(type, content.length,content)
+            val index = result[0]
             val time = result[1]
-            gb.tmpIntMap[name] = num
+            gb.tmpIntMap[taskID] = index
             gb.pm.blockProcess(time)
         }
     }
 
     /**
      * 释放外设
-     * @property name 外设名称
      *
      * @param pcb PCB
      */
-    class HwRelease(pcb: PCB, gb: GlobalModules, private val name: String) : Instruction(pcb, gb) {
+    class HwRelease(pcb: PCB, gb: GlobalModules,private val type:String, private val taskID: String) : Instruction(pcb, gb) {
         override fun invoke() {
-            gb.io.IOFacilityRelease(name, gb.tmpIntMap[name] ?: -1)
+            gb.io.IOFacilityRelease(type, gb.tmpIntMap[taskID] ?: -1)
         }
     }
 
