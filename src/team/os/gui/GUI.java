@@ -383,13 +383,13 @@ public class GUI extends JFrame {
         list_Process();
     }
 
-    void addList_Memory(String a, String b, int c, String d, int e, int f){
+    public void addList_Memory(String a, String b, int c, String d, int e, int f){
         list_Memory.add(new KeyValuePair_Memory(a,b,c,d,e,f));
         tableModel_Mem.addRow(new Object[]{list_Memory.get(iMem -1).name,list_Memory.get(iMem -1).type,list_Memory.get(iMem -1).size,list_Memory.get(iMem -1).count,list_Memory.get(iMem -1).pid,list_Memory.get(iMem -1).uid});
         iMem++;
     }
 
-    void subList_Memory(int a){
+    public void subList_Memory(int a){
         for (int j = 0; j < list_Memory.size(); j++) {
             if(a ==list_Memory.get(j).uid){
                 list_Memory.remove(j);
@@ -398,7 +398,7 @@ public class GUI extends JFrame {
         }
     }
 
-    void modList_Memory(int a, String b, String c, int d, String e, int f){
+    public void modList_Memory(int a, String b, String c, int d, String e, int f){
         for (int j = 0; j < list_Memory.size(); j++) {
             if(a == list_Memory.get(j).uid){
                 list_Memory.get(j).name = b;
