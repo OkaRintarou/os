@@ -17,8 +17,11 @@ public class GUI extends JFrame {
     private JTable tableProcess;//进程表格
     private JTable tableIO;//IO设备表格
     private JTable tableMemory;//内存表格
+    DefaultTableModel tableModel_Pro;
+    DefaultTableModel tableModel_Mem;
 
-    int i = 1;
+    int iPro = 1;
+    int iMem = 1;
 
     String proName;//进程名
     String fileName;//文件名
@@ -49,12 +52,16 @@ public class GUI extends JFrame {
         public String type;
         public int size;
         public String count;
+        public int pid;
+        public int uid;
 
-        public KeyValuePair_Memory(String first, String second, int third, String fourth) {
+        public KeyValuePair_Memory(String first, String second, int third, String fourth, int fifth, int sixth) {
             name = first;
             type = second;
             size = third;
             count = fourth;
+            pid = fifth;
+            uid = sixth;
         }
     }//内存list的格式
 
@@ -106,17 +113,17 @@ public class GUI extends JFrame {
     }
 
     protected void createProcess(ActionEvent e) {
-        DefaultTableModel tableModel = (DefaultTableModel) tableProcess.getModel();
-        tableModel.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态","当前指令序号","总指令条数"});
-        createProcess_Win(tableModel);
+        tableModel_Pro= (DefaultTableModel) tableProcess.getModel();
+        tableModel_Pro.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态","当前指令序号","总指令条数"});
+        createProcess_Win();
         tableProcess.setRowHeight(30);
-        tableProcess.setModel(tableModel);
+        tableProcess.setModel(tableModel_Pro);
     }//create button 触发器
 
     protected void deleteProcess(ActionEvent e) {
-        DefaultTableModel model = (DefaultTableModel) tableProcess.getModel();    //获得表格模型
-        deleteProcess_Win(model);
-        tableProcess.setModel(model);
+        tableModel_Pro= (DefaultTableModel) tableProcess.getModel();    //获得表格模型
+        deleteProcess_Win();
+        tableProcess.setModel(tableModel_Pro);
     }//delete button 触发器
 
     protected void actionProcess(ActionEvent e) {
@@ -154,11 +161,11 @@ public class GUI extends JFrame {
         frameACT.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }//action button 触发器
 
-    public void createProcess_Win(DefaultTableModel model) {
+    public void createProcess_Win() {
         JFrame frameCRE = new JFrame("create");
         JTextField textFieldPro = new JTextField(16);
         JTextField textFieldFile = new JTextField(16);
-        DefaultTableModel model1 = model;
+
         JPanel jpPro = new JPanel();
         JPanel jpFile = new JPanel();
         JPanel jpButton = new JPanel();
@@ -168,7 +175,7 @@ public class GUI extends JFrame {
         JButton buttonOK = new JButton("确定");
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                create_input(model1, frameCRE, textFieldPro, textFieldFile);
+                create_input(frameCRE, textFieldPro, textFieldFile);
             }
         });
         JButton buttonCan = new JButton("取消");
@@ -190,10 +197,9 @@ public class GUI extends JFrame {
         frameCRE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }//创建进程窗口
 
-    public void deleteProcess_Win(DefaultTableModel model) {
+    public void deleteProcess_Win() {
         JFrame frameDEL = new JFrame("delete");
         JTextField textFieldPid = new JTextField(16);
-        DefaultTableModel model1 = model;
         JPanel jpPid = new JPanel();
         JPanel jpButton = new JPanel();
         frameDEL.setSize(400, 200);
@@ -201,7 +207,7 @@ public class GUI extends JFrame {
         JButton buttonOK = new JButton("确定");
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                delete_input(model1, frameDEL, textFieldPid);
+                delete_input(frameDEL, textFieldPid);
             }
         });
         JButton buttonCan = new JButton("取消");
@@ -284,19 +290,19 @@ public class GUI extends JFrame {
     }
 
     private void list_Process() {
-        DefaultTableModel tableModel = (DefaultTableModel) tableProcess.getModel();
-        tableModel.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态","当前指令序号","总指令条数"});
-        for (KeyValuePair_Process p : list_Process) tableModel.addRow(new Object[]{p.pid, p.name, p.state,p.ID_now,p.all_ins});
+        tableModel_Pro = (DefaultTableModel) tableProcess.getModel();
+        tableModel_Pro.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态","当前指令序号","总指令条数"});
+        for (KeyValuePair_Process p : list_Process) tableModel_Pro.addRow(new Object[]{p.pid, p.name, p.state,p.ID_now,p.all_ins});
         tableProcess.setRowHeight(30);
-        tableProcess.setModel(tableModel);
+        tableProcess.setModel(tableModel_Pro);
     }
 
     void list_Memory() {
-        DefaultTableModel tableModel = (DefaultTableModel) tableMemory.getModel();
-        tableModel.setColumnIdentifiers(new Object[]{"变量名","变量类型","大小","值"});
-        for (KeyValuePair_Memory p : list_Memory) tableModel.addRow(new Object[]{p.name,p.type,p.size,p.count});
+        tableModel_Mem = (DefaultTableModel) tableMemory.getModel();
+        tableModel_Mem.setColumnIdentifiers(new Object[]{"变量名","变量类型","大小","值","pid","变量标识符"});
+        for (KeyValuePair_Memory p : list_Memory) tableModel_Mem.addRow(new Object[]{p.name,p.type,p.size,p.count,p.pid,p.uid});
         tableMemory.setRowHeight(30);
-        tableMemory.setModel(tableModel);
+        tableMemory.setModel(tableModel_Mem);
     }
 
     void list_IO() {
@@ -308,13 +314,12 @@ public class GUI extends JFrame {
     }
 
     void list_data() {
-        list_Memory.add(new KeyValuePair_Memory("1", "111",510,"haha"));
+        list_Memory.add(new KeyValuePair_Memory("1", "111",510,"haha",1,1));
         list_IO.add(new KeyValuePair_IO("鼠标", "true"));
     }
 
-    void create_input(DefaultTableModel model, JFrame frame, JTextField text1, JTextField text2) {
+    void create_input(JFrame frame, JTextField text1, JTextField text2) {
         JFrame frameCRE = frame;
-        DefaultTableModel tableModel = model;
         JTextField textFieldPro = text1;
         JTextField textFieldFile = text2;
         proName = textFieldPro.getText();
@@ -323,17 +328,14 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog(null, "输入错误！请重新输入。", "警告", 2);
         } else {
             Global.INSTANCE.createProcess(proName, fileName);
-            list_Process.add(new KeyValuePair_Process(i, "lxh", "true", i,i));
-            tableModel.addRow(new Object[]{list_Process.get(i-1).pid,list_Process.get(i-1).name,list_Process.get(i-1).state,list_Process.get(i-1).ID_now,list_Process.get(i-1).all_ins});
-            i++;
+            addList_Process();
             JOptionPane.showMessageDialog(null, "输入成功！");
             frameCRE.dispose();
         }
     }//创建进程窗口确定键触发器中函数
 
-    void delete_input(DefaultTableModel model, JFrame frame, JTextField text1) {
+    void delete_input(JFrame frame, JTextField text1) {
         JFrame frameDEL = frame;
-        DefaultTableModel tableModel = model;
         JTextField textFieldPid = text1;
         pid_DEL = Integer.parseInt(textFieldPid.getText());
         if (list_Process.size() > 0) {
@@ -341,7 +343,7 @@ public class GUI extends JFrame {
                 if (pid_DEL == list_Process.get(j).pid) {
                     Global.INSTANCE.killProcess(pid_DEL);
                     list_Process.remove(j);
-                    model.removeRow(j);
+                    tableModel_Pro.removeRow(j);
                     JOptionPane.showMessageDialog(panel, "删除进程成功。");
                     break;
                 } else if (j == list_Process.size() - 1) {
@@ -352,6 +354,46 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog(panel, "没有正在运行的进程！", "警告", 2);
         }
     }//删除进程窗口确定键触发器中函数
+
+     public void addList_Process(){
+        list_Process.add(new KeyValuePair_Process(iPro, "lxh", "true", iPro, iPro));
+        tableModel_Pro.addRow(new Object[]{list_Process.get(iPro -1).pid,list_Process.get(iPro -1).name,list_Process.get(iPro -1).state,list_Process.get(iPro -1).ID_now,list_Process.get(iPro -1).all_ins});
+        iPro++;
+    }
+
+    public void subList_Process(int a) {
+        for (int j = 0; j < list_Process.size(); j++) {
+            if(a ==list_Process.get(j).pid){
+                list_Process.remove(j);
+                tableModel_Pro.removeRow(j);
+            }
+        }
+    }
+
+    public void modList_Process(int a, String b, String c, int d, int e){
+        for (int j = 0; j < list_Process.size(); j++) {
+            if(a == list_Process.get(j).pid){
+                list_Process.get(j).name = b;
+                list_Process.get(j).state = c;
+                list_Process.get(j).ID_now = d;
+                list_Process.get(j).all_ins = e;
+            }
+        }
+        tableModel_Pro.setRowCount(0);
+        list_Process();
+    }
+
+    void addList_Memory(){
+
+    }
+
+    void subList_Memory(int a){
+
+    }
+
+    void modList_Memory(int a, String b,String c){
+
+    }
 
     void action_update(JFrame frame, JTextField text1, JTextField text2) {
         JFrame frameACT = frame;
