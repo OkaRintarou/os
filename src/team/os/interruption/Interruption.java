@@ -10,5 +10,10 @@ public class Interruption {
      * */
     public String filePath;
     public int interruptId;
+
+    public Interruption(String filePath, int interruptId) {
+        this.filePath = filePath;
+        this.interruptId = interruptId;
+    }
 }
 

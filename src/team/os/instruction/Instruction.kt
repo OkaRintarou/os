@@ -66,6 +66,7 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
     class Block(pcb:PCB,gb:GlobalModules,private val cycle:Int):Instruction(pcb,gb){
         override fun invoke() {
             gb.pm.blockProcess(cycle)
+            //TODO
         }
     }
 

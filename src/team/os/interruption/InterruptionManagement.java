@@ -9,6 +9,9 @@ import java.util.Map;
  * 产生新中断
  * */
 public class InterruptionManagement implements IInterruptionManagement {
+    public final class InterruptId {
+        public final static int BLOCK_INTERRUPTION = 1;
+    }
     private final Map<Integer, Interruption> interruptionTable; //中断向量表
     private boolean isAllowInterrupt; //标识是否允许中断
     //TODO: 需要时钟管理模块来配合中断管理模块，例如每个时间片产生中断进行进程调度
@@ -16,6 +19,7 @@ public class InterruptionManagement implements IInterruptionManagement {
 
     private InterruptionManagement() {
         interruptionTable = new HashMap<>();
+        interruptionTable.put(1, new Interruption("interrrupt.txt", 1));
         isAllowInterrupt = true;
     }
     /**
@@ -26,10 +30,15 @@ public class InterruptionManagement implements IInterruptionManagement {
     }
 
     @Override
-    public void generateInterruption(int interruptId) {
-        //TODO：需要中断执行程序的支持
-        //目前的思路是将中断执行程序初始化成一个状态为Interrupt的进程，并且设置关中断
-        //即不允许多层中断产生，直到中断处理程序执行完毕
+    public void generateInterruption(int interruptId, String processName, int cycle) {
+        switch (interruptId) {
+            case InterruptId.BLOCK_INTERRUPTION: {
+                System.out.println("Process " + processName + " block for " + cycle + " cycle");
+            }
+            default: {
+                //请放心吧。。不会走到这里的
+            }
+        }
     }
 
     @Override
