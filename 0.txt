@@ -1,11 +1,15 @@
 CreateProcess p1 1.txt
+CreateProcess p2 1.txt
+CreateProcess p3 1.txt
+CreateProcess p4 1.txt
+CreateProcess p5 1.txt
+CreateProcess p6 1.txt
+CreateProcess p7 1.txt
+CreateProcess p8 1.txt
+CreateProcess p9 1.txt
+CreateProcess p10 1.txt
+CreateProcess p11 1.txt
+CreateProcess p12 1.txt
+CreateProcess p13 1.txt
 SendMsg p1 test_msg_here
 Block 20
-VarDeclare v1 String 10
-VarDeclare v2 String 10
-VarWrite v1 strccccc String
-VarWrite v2 aaa String
-StrCat v1 v2 v1
-VarPrint v1 String
-VarPrint v1 String
-VarPrint v1 String

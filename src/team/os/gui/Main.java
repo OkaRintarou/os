@@ -18,8 +18,8 @@ public class Main {
         frame.setVisible(true);
 
         // For test
-        for (int i=0;i<50;i++){
-            Global.INSTANCE.getPm().singleRoundExecution(1);
+        for (int i=0;i<100;i++){
+            Global.INSTANCE.getPm().singleRoundExecution(50);
         }
         // End
     }
