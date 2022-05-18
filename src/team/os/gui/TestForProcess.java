@@ -7,8 +7,8 @@ public class TestForProcess {
     public static void main(String[] args) {
         ProcessManagement pm = Global.INSTANCE.getPm();
         pm.createProcess("p0", "0.txt");
-        for (int i = 0; i < 50; ++i) {
-            pm.singleRoundExecution(2);
+        for (int i = 0; i < 100; ++i) {
+            pm.singleRoundExecution(50);
         }
     }
 }

@@ -20,6 +20,7 @@ public final class Process implements IProcess {
         private final List<IOStuff> resourceList; //系统资源清单
         private final List<ProcessManagement.Message> messageList; //进程的消息列表
         private int blockTime; //进程剩余阻塞时间，如果没有被阻塞则为0
+        private boolean isExecuted; //进程执行标识位，用于保证一个时钟周期一个进程只执行一次
 
         public PCB(int pid, String name, ProcessStates state, String filePath, int memorySize, Process process) {
             this.pid = pid;
@@ -31,6 +32,7 @@ public final class Process implements IProcess {
             this.process = process;
             this.messageList = new LinkedList<>();
             this.blockTime = 0;
+            this.isExecuted = false;
         }
 
         public Process getProcess() {
@@ -87,6 +89,14 @@ public final class Process implements IProcess {
 
         public void decreaseBlockTime() {
             this.blockTime--;
+        }
+
+        public boolean isExecuted() {
+            return isExecuted;
+        }
+
+        public void setIsExecuted(boolean isExecuted) {
+            this.isExecuted = isExecuted;
         }
     }
 

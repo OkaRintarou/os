@@ -173,12 +173,15 @@ public final class ProcessManagement implements IProcessManagement {
 
     @Override
     public void singleRoundExecution(int coreNumber) {
+        //在给定时间范围内执行就绪队列中的就绪进程
         for (int i = 0; i < coreNumber; ++i) {
             // 如果当前运行态没有进程，那么说明就绪队列一定为空
-            if (runningProcess == null) break;
+            if (runningProcess == null || runningProcess.isExecuted()) break;
             boolean res = runningProcess.getProcess().run();
+            runningProcess.setIsExecuted(true);
             if (res) { //如果当前运行态进程还有指令未执行，则执行就绪队列和运行态切换
                 if (runningProcess != null && runningProcess.getState().equals(Process.ProcessStates.BLOCK)) {
+                    runningProcess.setIsExecuted(false);
                     runningProcess = null;
                 }
                 scheduleProcess();
@@ -190,7 +193,7 @@ public final class ProcessManagement implements IProcessManagement {
                 }
             }
         }
-
+        //每个时钟周期检查是否有阻塞进程需要被唤醒，如果有则唤醒（唤醒进程放到下一轮时钟周期执行）
         int i = 0;
         while (i < blockQueue.size()) {
             blockQueue.get(i).decreaseBlockTime();
@@ -200,6 +203,14 @@ public final class ProcessManagement implements IProcessManagement {
             } else {
                 ++i;
             }
+        }
+
+        //重置进程执行标识位
+        if (runningProcess != null && runningProcess.isExecuted()) {
+            runningProcess.setIsExecuted(false);
+        }
+        for (Process.PCB pcb: readyQueue) {
+            pcb.setIsExecuted(false);
         }
     }
 
