@@ -106,7 +106,7 @@ public class MemoryManager implements IMemoryManager {
 
     @Override
     public int varDeclare(int pid, String varName, String varType, int... size) {
-        int varSize = isVarLegal(varType, size);
+        int varSize = isVarLegal(pid, varName, varType, size);
         if (varSize == -1)
             return -1;
 
@@ -137,6 +137,7 @@ public class MemoryManager implements IMemoryManager {
             int varID = proVarMap.get(pid).get(varName);
             if (heap.get(varID).getType().equals("Int")) {
                 String val = heap.get(varID).getValue();
+                System.out.println("The value of variable " + varID + " is \"" + val + "\"");
                 return Integer.parseInt(val);
             } else
                 System.out.println("\33[31m" + "Error: Variable " + varID + " is not int!" + "\33[0m");
@@ -151,9 +152,11 @@ public class MemoryManager implements IMemoryManager {
     public String varReadString(int pid, String varName) {
         try {
             int varID = proVarMap.get(pid).get(varName);
-            if (heap.get(varID).getType().equals("String"))
-                return heap.get(varID).getValue();
-            else
+            if (heap.get(varID).getType().equals("String")) {
+                String val = heap.get(varID).getValue();
+                System.out.println("The value of variable " + varID + " is \"" + val + "\"");
+                return val;
+            } else
                 System.out.println("\33[31m" + "Error: Variable " + varID + " is not String!" + "\33[0m");
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -217,19 +220,28 @@ public class MemoryManager implements IMemoryManager {
      * @param size    变量大小
      * @return 合法返回变量大小，否则返回-1
      */
-    private int isVarLegal(String varType, int... size) {
+    private int isVarLegal(int pid, String varName, String varType, int... size) {
+        // 检查同一进程的变量名是否重复
+        for (String name : proVarMap.get(pid).keySet()) {
+            if (name.equals(varName)) {
+                System.out.println("\33[31m" + "Error: Cannot declare the same variable name to the same process!!!" + "\33[0m");
+                return -1;
+            }
+        }
+
         // 检查数据的合法性
         int varSize = 4;
         if (varType.equals("String")) {
             if (size == null) {
-                System.out.println("\33[31m" + "Error: A string var must have a size" + "\33[0m");
+                System.out.println("\33[31m" + "Error: A string var must have a size!!!" + "\33[0m");
                 return -1;
             } else
                 varSize = size[0];
         } else if (!varType.equals("Int")) {
-            System.out.println("\33[31m" + "Error in the type of variable" + "\33[0m");
+            System.out.println("\33[31m" + "Error in the type of variable!!!" + "\33[0m");
             return -1;
         }
+
         // 检查堆内存是否足够分配
         if (curHeapSize + varSize > HEAP_SIZE_MAX) {
             System.out.println("\33[31m" + "Error: The rest heap space is not enough!!!" + "\33[0m");

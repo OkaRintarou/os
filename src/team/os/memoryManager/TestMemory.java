@@ -55,7 +55,7 @@ public class TestMemory {
                     System.out.print("Input pid & varName: ");
                     pid = scanner.nextInt();
                     varName = scanner.next();
-                    System.out.println("The value is \"" + memManage.varReadString(pid, varName) + "\"");
+                    memManage.varReadString(pid, varName);
                     break;
                 // 写String变量
                 case 5:
@@ -70,7 +70,7 @@ public class TestMemory {
                     System.out.println("Input pid & varName: ");
                     pid = scanner.nextInt();
                     varName = scanner.next();
-                    System.out.println("The value is \"" + memManage.varReadInt(pid, varName) + "\"");
+                    memManage.varReadInt(pid, varName);
                     break;
                 // 写Int变量
                 case 7:
