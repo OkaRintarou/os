@@ -14,7 +14,6 @@ public class InterruptionManagement implements IInterruptionManagement {
     }
     private final Map<Integer, Interruption> interruptionTable; //中断向量表
     private boolean isAllowInterrupt; //标识是否允许中断
-    //TODO: 需要时钟管理模块来配合中断管理模块，例如每个时间片产生中断进行进程调度
     private static final InterruptionManagement instance = new InterruptionManagement();
 
     private InterruptionManagement() {

@@ -11,7 +11,7 @@ public final class ProcessManagement implements IProcessManagement {
         public int dst;
         public int src;
 
-        public Message(String message, int src, int dst){
+        public Message(String message, int src, int dst) {
             this.message = message;
             this.src = src;
             this.dst = dst;
@@ -26,6 +26,7 @@ public final class ProcessManagement implements IProcessManagement {
                     '}';
         }
     } //格式化消息，用于进程间通信
+
     private int processNumber; //当前系统中进程数,用于产生pid，因此是一个只增值，不允许减少
     private final Map<Integer, Process.PCB> processTable; //系统进程表
     private Process.PCB runningProcess; //当前处于running状态进程
@@ -45,9 +46,10 @@ public final class ProcessManagement implements IProcessManagement {
         mailBox = new LinkedList<>();
         suspendQueue = new LinkedList<>();
     }
+
     /**
      * 调用getInstance获取全局唯一ProcessManagement实例
-     * */
+     */
     public static ProcessManagement getInstance() {
         return instance;
     }
@@ -55,7 +57,7 @@ public final class ProcessManagement implements IProcessManagement {
     @Override
     public int createProcess(String processName, String filePath) {
         Process process = new Process(processNumber, processName, filePath, -1);
-        InstructionSet instructionSet = Global.INSTANCE.getInsSetFactory().getInst(filePath, process.getPCB(),processName);
+        InstructionSet instructionSet = Global.INSTANCE.getInsSetFactory().getInst(filePath, process.getPCB(), processName);
         if (!Global.INSTANCE.getMm().memoryRequest(instructionSet.getInsCount() * 8)) {
             process = null;
             throw new RuntimeException("\u0001[33m" + "\tcreate process failed!" + "\u0001[0m");
@@ -67,6 +69,13 @@ public final class ProcessManagement implements IProcessManagement {
             processNumber++;
             readyQueue.add(process.getPCB());
             if (runningProcess == null) runningProcess = readyQueue.remove(0);
+            Global.INSTANCE.getGui().addList_Process(
+                    process.getPid(),
+                    process.getPCB().getName(),
+                    process.getPCB().getState(),
+                    process.getInstructionSet().getPointer(),
+                    process.getInstructionSet().getInsCount()
+            );
             return process.getPid();
         }
     }
@@ -91,6 +100,9 @@ public final class ProcessManagement implements IProcessManagement {
                     suspendQueue.remove(pcb);
                 }
             }
+            //图形化用户接口增加信息
+            Global.INSTANCE.getGui().subList_Process(pid);
+
             processTable.remove(pid);
             Global.INSTANCE.getMm().memoryFree(pid);
             if (suspendQueue.size() != 0 && Global.INSTANCE.getMm().memoryRequest(suspendQueue.get(0).getMemorySize())) {
@@ -112,18 +124,50 @@ public final class ProcessManagement implements IProcessManagement {
         blockQueue.add(runningProcess);
         runningProcess.setBlockTime(blockTime);
         runningProcess.setState(Process.ProcessStates.BLOCK);
+        Global.INSTANCE.getGui().modList_Process(
+                runningProcess.getPid(),
+                runningProcess.getName(),
+                runningProcess.getState(),
+                runningProcess.getProcess().getInstructionSet().getPointer(),
+                runningProcess.getProcess().getInstructionSet().getInsCount()
+        );
     }
 
     @Override
     public void scheduleProcess() {
         if (runningProcess == null) { //初始状态，即就绪队列和运行态均为空的情况
             runningProcess = readyQueue.size() == 0 ? null : readyQueue.remove(0);
-            if (runningProcess != null) runningProcess.setState(Process.ProcessStates.RUNNING);
+            if (runningProcess != null) {
+                runningProcess.setState(Process.ProcessStates.RUNNING);
+                Global.INSTANCE.getGui().modList_Process(
+                        runningProcess.getPid(),
+                        runningProcess.getName(),
+                        runningProcess.getState(),
+                        runningProcess.getProcess().getInstructionSet().getPointer(),
+                        runningProcess.getProcess().getInstructionSet().getInsCount()
+                );
+            }
         } else { //途中状态，即就绪队列不为空的情况
+            //更新running -> ready
             readyQueue.add(runningProcess);
             runningProcess.setState(Process.ProcessStates.READY);
+            Global.INSTANCE.getGui().modList_Process(
+                    runningProcess.getPid(),
+                    runningProcess.getName(),
+                    runningProcess.getState(),
+                    runningProcess.getProcess().getInstructionSet().getPointer(),
+                    runningProcess.getProcess().getInstructionSet().getInsCount()
+            );
+            //更新ready -> running
             runningProcess = readyQueue.remove(0);
             runningProcess.setState(Process.ProcessStates.RUNNING);
+            Global.INSTANCE.getGui().modList_Process(
+                    runningProcess.getPid(),
+                    runningProcess.getName(),
+                    runningProcess.getState(),
+                    runningProcess.getProcess().getInstructionSet().getPointer(),
+                    runningProcess.getProcess().getInstructionSet().getInsCount()
+            );
         }
     }
 
@@ -137,6 +181,13 @@ public final class ProcessManagement implements IProcessManagement {
                 pcb.setState(Process.ProcessStates.READY);
                 readyQueue.add(pcb);
                 blockQueue.remove(pcb);
+                Global.INSTANCE.getGui().modList_Process(
+                        pid,
+                        pcb.getName(),
+                        pcb.getState(),
+                        pcb.getProcess().getInstructionSet().getPointer(),
+                        pcb.getProcess().getInstructionSet().getInsCount()
+                );
             } else {
                 throw new RuntimeException("process " + pid + "not exist in blockQueue, check it first");
             }
@@ -151,7 +202,7 @@ public final class ProcessManagement implements IProcessManagement {
     @Override
     public List<Map<Integer, Process.ProcessStates>> getAllProcessState() {
         List<Map<Integer, Process.ProcessStates>> res = new LinkedList<>();
-        for (Map.Entry<Integer, Process.PCB> entry: processTable.entrySet()) {
+        for (Map.Entry<Integer, Process.PCB> entry : processTable.entrySet()) {
             Map<Integer, Process.ProcessStates> map = new HashMap<>();
             map.put(entry.getKey(), entry.getValue().getState());
             res.add(map);
@@ -168,6 +219,13 @@ public final class ProcessManagement implements IProcessManagement {
             blockQueue.remove(pcb);
             pcb.setState(Process.ProcessStates.SUSPEND);
             suspendQueue.add(pcb);
+            Global.INSTANCE.getGui().modList_Process(
+                    pid,
+                    pcb.getName(),
+                    pcb.getState(),
+                    pcb.getProcess().getInstructionSet().getPointer(),
+                    pcb.getProcess().getInstructionSet().getInsCount()
+            );
         }
     }
 
@@ -209,7 +267,7 @@ public final class ProcessManagement implements IProcessManagement {
         if (runningProcess != null && runningProcess.isExecuted()) {
             runningProcess.setIsExecuted(false);
         }
-        for (Process.PCB pcb: readyQueue) {
+        for (Process.PCB pcb : readyQueue) {
             pcb.setIsExecuted(false);
         }
     }

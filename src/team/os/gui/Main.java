@@ -11,6 +11,5 @@ public class Main {
         frame.setVisible(true);
 //        Timer timer = new Timer();
 //        timer.schedule(new GUI.update(), 0, 1000);
-
     }
 }
