@@ -397,6 +397,7 @@ public class GUI extends JFrame {
             if(pidPro ==list_Process.get(j).pid){
                 list_Process.remove(j);
                 tableModel_Pro.removeRow(j);
+                iPro--;
                 break;
             }
         }
@@ -427,6 +428,7 @@ public class GUI extends JFrame {
             if(uidMem ==list_Memory.get(j).uid){
                 list_Memory.remove(j);
                 tableModel_Mem.removeRow(j);
+                iMem--;
                 break;
             }
         }
@@ -453,6 +455,7 @@ public class GUI extends JFrame {
             if(nameIO.equals(list_IO.get(j).name)){
                 list_IO.remove(j);
                 tableModel_IO.removeRow(j);
+                iIO--;
                 break;
             }
         }

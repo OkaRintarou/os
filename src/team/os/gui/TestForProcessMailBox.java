@@ -20,10 +20,9 @@ public class TestForProcessMailBox {
         Process processA = new Process(0, "A", "", 8);
         Process processB = new Process(1, "B", "", 8);
         Process processC = new Process(2, "C", "", 8);
-        processC.sendMessage("你好哈哈哈A", 0);
-        processC.sendMessage("你个杀人犯！", 0);
-        processA.sendMessage("你好哇B", 1);
-        processA.sendMessage("我寄了B，啊！", 1);
+        processC.sendMessage("A你好", 0);
+        processA.sendMessage("B你好哇", 1);
+        processA.sendMessage("再见B", 1);
         System.out.println("共享邮箱:" + instance.getMailBox());
         processB.getMessage();
         System.out.println("共享邮箱:" + instance.getMailBox());

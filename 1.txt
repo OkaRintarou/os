@@ -7,4 +7,5 @@ VarPrint v1 String
 VarPrint v2 String
 StrCat v1 v2 v1
 VarPrint v1 String
+Block 10
 Exit
