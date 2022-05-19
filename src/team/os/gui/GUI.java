@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GUI extends JFrame {
     private JPanel contentPane;//主界面
@@ -84,12 +85,7 @@ public class GUI extends JFrame {
 
 
     public ArrayList<String> getInsString() {
-        // TODO: 2022/5/9
-        ArrayList<String> list = new ArrayList<>();
-        list.add("VarPrint v1 String");
-        list.add("VarPrint v1 String");
-        list.add("VarPrint v1 String");
-        return list;
+        return brokerMethod();
     }
 
     public void print(String msg) {
@@ -111,8 +107,10 @@ public class GUI extends JFrame {
         list_IMP();
     }
 
-    public void brokerMethod() {
-        JOptionPane.showInputDialog(null,"brokerMethod","Bro",1);
+    public ArrayList<String> brokerMethod() {
+        String str=JOptionPane.showInputDialog(null,"brokerMethod","Bro",1);
+        String[] split = str.split("#");
+        return new ArrayList<>(Arrays.asList(split));
     }
 
     protected void createProcess(ActionEvent e) {
@@ -414,6 +412,7 @@ public class GUI extends JFrame {
     public void addList_IO(String nameIO, String stateIO){
         list_IO.add(new KeyValuePair_IO(nameIO,stateIO));
         tableModel_IO.addRow(new Object[]{list_IO.get(iIO -1).name,list_IO.get(iIO -1).state});
+        iIO++;
     }
 
     public void subList_IO(String nameIO){
@@ -442,6 +441,5 @@ public class GUI extends JFrame {
         count_cyc = Integer.parseInt(text1.getText());
         count_cor = Integer.parseInt(text2.getText());
         Global.INSTANCE.exec(count_cyc, count_cor);
-        //TODO: 后续应该更新表格
     }//执行窗口确定键触发器中函数
 }

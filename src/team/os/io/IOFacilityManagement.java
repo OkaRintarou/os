@@ -1,5 +1,7 @@
 package team.os.io;
 
+import team.os.global.Global;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +52,8 @@ public class IOFacilityManagement {
             //IOFacilityRelease("printer",temp);
         }
         System.out.println("From io: Request " + facilityRest);
+        if (facilityRest.get(0) !=-1)
+            Global.INSTANCE.getGui().modList_IO(test0.facilityTotalNumberChart.get(facilityRest.get(0) - 1),"占用");
         return facilityRest;
     }
 
@@ -69,6 +73,7 @@ public class IOFacilityManagement {
         if (index == -1 || index >= test0.stateChart.size()) return 0;
         if (test0.stateChart.get(index - 1) == 1) {
             test0.stateChart.set(index - 1, 0);//改变当前设备状态
+            Global.INSTANCE.getGui().modList_IO(test0.facilityTotalNumberChart.get(index-1),"空闲");
             System.out.println("From io: release " + (index - 1));
             return 1;
         } else

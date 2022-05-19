@@ -222,10 +222,12 @@ public class MemoryManager implements IMemoryManager {
      */
     private int isVarLegal(int pid, String varName, String varType, int... size) {
         // 检查同一进程的变量名是否重复
-        for (String name : proVarMap.get(pid).keySet()) {
-            if (name.equals(varName)) {
-                System.out.println("\33[31m" + "Error: Cannot declare the same variable name to the same process!!!" + "\33[0m");
-                return -1;
+        if(proVarMap.containsKey(pid)) {
+            for (String name : proVarMap.get(pid).keySet()) {
+                if (name.equals(varName)) {
+                    System.out.println("\33[31m" + "Error: Cannot declare the same variable name to the same process!!!" + "\33[0m");
+                    return -1;
+                }
             }
         }
 
