@@ -31,40 +31,45 @@ public interface IMemoryManager {
      *
      * @param pid     变量所属进程id
      * @param varType 变量类型( String/int )
+     * @param varName 变量名
      * @param size    变量需要的内存大小 ( int变量默认为4，可不传参)
      * @return 区分不同变量的唯一标识，返回-1时为异常情况
      */
-    int varDeclare(int pid, String varType, int... size);
+    int varDeclare(int pid, String varName, String varType, int... size);
 
     /**
      * 返回int变量的值
      *
-     * @param varID 变量标识
+     * @param pid     变量所属进程标识符
+     * @param varName 变量名
      */
-    int varReadInt(int varID);
+    int varReadInt(int pid, String varName);
 
     /**
      * 返回String变量的值
      *
-     * @param varID 变量标识
+     * @param pid     变量所属进程标识符
+     * @param varName 变量名
      */
-    String varReadString(int varID);
+    String varReadString(int pid, String varName);
 
     /**
      * 更改int变量的值
      *
+     * @param pid      变量所属进程标识符
+     * @param varName  变量名
      * @param varValue 写的值
-     * @param varID    变量标识
      */
-    void varWriteInt(int varID, int varValue);
+    void varWriteInt(int pid, String varName, int varValue);
 
     /**
      * 更改String变量的值
      *
+     * @param pid      变量所属进程标识符
+     * @param varName  变量名
      * @param varValue 写的值
-     * @param varID    变量标识
      */
-    void varWriteString(int varID, String varValue);
+    void varWriteString(int pid, String varName, String varValue);
 
     /**
      * 返回内存分配情况

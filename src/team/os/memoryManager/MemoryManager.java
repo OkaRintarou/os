@@ -18,11 +18,16 @@ public class MemoryManager implements IMemoryManager {
 
     private int curHeapSize;                        // 当前堆大小
     private int varIdSeq;                           // 下一个被分配的varId，[1,1000]
-    private final HashMap<Integer, ArrayList<Integer>> proVarMap;    // key:pid  value:varId列表
-    private final HashMap<Integer, VarPartition> heap;              // 堆：变量标识与变量信息的一一映射
-    private final Set<Integer> varIdSet;            // 活跃的变量表示集合
 
-    private int SeqFreed;                           // 替换进程时方便定位被替换进程的空闲分区编号
+    /**
+     * key:pid  value:varName与varId的映射
+     */
+    private final HashMap<Integer, HashMap<String, Integer>> proVarMap;
+    private final HashMap<Integer, VarPartition> heap;      // 堆：变量标识与变量信息的一一映射
+    private final Set<Integer> varIdSet;                    // 活跃的变量表示集合
+
+    // 替换进程时方便定位被替换进程的空闲分区编号
+    private int SeqFreed;
 
     public MemoryManager() {
         this.seqForNewPro = -1;
@@ -100,7 +105,7 @@ public class MemoryManager implements IMemoryManager {
     }
 
     @Override
-    public int varDeclare(int pid, String varType, int... size) {
+    public int varDeclare(int pid, String varName, String varType, int... size) {
         int varSize = isVarLegal(varType, size);
         if (varSize == -1)
             return -1;
@@ -109,23 +114,27 @@ public class MemoryManager implements IMemoryManager {
         if (!generateNextVarId()) return -1;
         varIdSet.add(varIdSeq);
 
-        // 增加 进程id 与 变量id 的映射关系
+        // 增加 进程id 与 变量名 的映射关系
         if (!proVarMap.containsKey(pid))
-            proVarMap.put(pid, new ArrayList<>());
-        proVarMap.get(pid).add(varIdSeq);
+            proVarMap.put(pid, new HashMap<>());
+        proVarMap.get(pid).put(varName, varIdSeq);
 
         // 保存变量基本信息
         VarPartition varPar;
         varPar = new VarPartition(varSize, varType);
         heap.put(varIdSeq, varPar);
         curHeapSize += varSize;
+
+        // 更新gui中变量信息
+        Global.INSTANCE.getGui().addList_Memory(varName, varType, varSize, varPar.getValue(), pid, varIdSeq);
         System.out.println("Increase a variable for process " + pid + ". VarId is " + varIdSeq + ".");
         return varIdSeq;
     }
 
     @Override
-    public int varReadInt(int varID) {
+    public int varReadInt(int pid, String varName) {
         try {
+            int varID = proVarMap.get(pid).get(varName);
             if (heap.get(varID).getType().equals("Int")) {
                 String val = heap.get(varID).getValue();
                 return Integer.parseInt(val);
@@ -139,8 +148,9 @@ public class MemoryManager implements IMemoryManager {
     }
 
     @Override
-    public String varReadString(int varID) {
+    public String varReadString(int pid, String varName) {
         try {
+            int varID = proVarMap.get(pid).get(varName);
             if (heap.get(varID).getType().equals("String"))
                 return heap.get(varID).getValue();
             else
@@ -153,13 +163,16 @@ public class MemoryManager implements IMemoryManager {
     }
 
     @Override
-    public void varWriteInt(int varID, int varValue) {
+    public void varWriteInt(int pid, String varName, int varValue) {
         try {
+            int varID = proVarMap.get(pid).get(varName);
             if (heap.get(varID).getType().equals("Int")) {
                 heap.get(varID).setValue(Integer.toString(varValue));
                 System.out.println("Write successfully for varId:" + varID + " ,value is " + varValue);
             } else
                 System.out.println("\33[31m" + "Error: Variable " + varID + " is not int!" + "\33[0m");
+            // todo
+            Global.INSTANCE.getGui().modList_Memory(varName, "Int", 4, Integer.toString(varValue), pid, varID);
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("\33[31;4m" + "\tCannot write a variable which doesn't exist!" + "\33[0m");
@@ -167,8 +180,9 @@ public class MemoryManager implements IMemoryManager {
     }
 
     @Override
-    public void varWriteString(int varID, String varValue) {
+    public void varWriteString(int pid, String varName, String varValue) {
         try {
+            int varID = proVarMap.get(pid).get(varName);
             VarPartition var = heap.get(varID);
             if (var.getType().equals("String")) {
                 String realValue = varValue;
@@ -181,6 +195,8 @@ public class MemoryManager implements IMemoryManager {
                 System.out.println("Write successfully for varId:" + varID + " ,value is " + realValue);
             } else
                 System.out.println("\33[31m" + "Error: Variable " + varID + " is not String!" + "\33[0m");
+            // todo
+            Global.INSTANCE.getGui().modList_Memory(varName, "String", 4, varValue, pid, varID);
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("\33[31;4m" + "\tCannot write a variable which doesn't exist!" + "\33[0m");
@@ -338,10 +354,11 @@ public class MemoryManager implements IMemoryManager {
      * @param pid 进程id
      */
     private void varFree(int pid) {
-        for (Integer varId : proVarMap.get(pid)) {
+        for (Integer varId : proVarMap.get(pid).values()) {
             curHeapSize -= heap.get(varId).getSize();
             heap.remove(varId);
             varIdSet.remove(varId);
+            Global.INSTANCE.getGui().subList_Memory(varId);
         }
         proVarMap.remove(pid);
     }
