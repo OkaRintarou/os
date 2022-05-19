@@ -169,9 +169,9 @@ public class MemoryManager implements IMemoryManager {
             if (heap.get(varID).getType().equals("Int")) {
                 heap.get(varID).setValue(Integer.toString(varValue));
                 System.out.println("Write successfully for varId:" + varID + " ,value is " + varValue);
+                Global.INSTANCE.getGui().modList_Memory(Integer.toString(varValue), varID);
             } else
                 System.out.println("\33[31m" + "Error: Variable " + varID + " is not int!" + "\33[0m");
-            Global.INSTANCE.getGui().modList_Memory(Integer.toString(varValue), varID);
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("\33[31;4m" + "\tCannot write a variable which doesn't exist!" + "\33[0m");
@@ -192,9 +192,9 @@ public class MemoryManager implements IMemoryManager {
                 }
                 heap.get(varID).setValue(realValue);
                 System.out.println("Write successfully for varId:" + varID + " ,value is " + realValue);
+                Global.INSTANCE.getGui().modList_Memory(realValue, varID);
             } else
                 System.out.println("\33[31m" + "Error: Variable " + varID + " is not String!" + "\33[0m");
-            Global.INSTANCE.getGui().modList_Memory(varValue, varID);
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("\33[31;4m" + "\tCannot write a variable which doesn't exist!" + "\33[0m");
