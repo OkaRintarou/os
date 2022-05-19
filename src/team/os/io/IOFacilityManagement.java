@@ -86,21 +86,4 @@ public class IOFacilityManagement {
             return 0;
     }
 
-    public static void main(String[] args)
-    {
-        IOFacilityManagement dome =new IOFacilityManagement();
-        dome.init();
-        System.out.println("Facility:"+dome.test0.facilityTotalNumberChart);
-        System.out.println("State:"+dome.test0.stateChart);
-        dome.IOFacilityRequst("printer",1010,"1234444");
-        System.out.println("request printer State:"+dome.test0.stateChart);
-        dome.IOFacilityRequst("keyboard",1010,"1234444");
-        System.out.println("request keyboard State:"+dome.test0.stateChart);
-        dome.IOFacilityRequst("keyboard",1010,"1234444");
-        System.out.println("request keyboard State:"+dome.test0.stateChart);
-        dome.IOFacilityRequst("keyboard",1010,"1234444");
-        System.out.println("request keyboard State:"+dome.test0.stateChart);
-        //System.out.println("State:"+dome.test0.stateChart  );
-    }
-
 }

@@ -111,7 +111,7 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
     class VarDeclare(pcb: PCB, gb: GlobalModules, private val name: String, private val type: String,private val size: Int) :
         Instruction(pcb, gb) {
         override fun invoke() {
-            gb.mm.varDeclare(pcb.pid, type, size).let {
+            gb.mm.varDeclare(pcb.pid, name,type, size).let {
                 gb.variables[name] = it
             }
         }
@@ -132,8 +132,8 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
             if (name[0] != '$')
                 gb.mm.run {
                     when (type) {
-                        "String" -> gb.tmpStrMap[name] = varReadString(gb.variables[name] ?: -1)
-                        "Int" -> gb.tmpIntMap[name] = varReadInt(gb.variables[name] ?: -1)
+                        "String" -> gb.tmpStrMap[name] = varReadString(pcb.pid,name)
+                        "Int" -> gb.tmpIntMap[name] = varReadInt(pcb.pid,name)
                         else -> throw Exception("Invalid varPrint type!")
                     }
                 }
@@ -155,8 +155,8 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
     class VarWrite(pcb: PCB, gb: GlobalModules, private val name: String, private val value: String,private val type:String) : Instruction(pcb, gb) {
         override fun invoke() {
             when(type){
-                "String"->gb.mm.varWriteString(gb.variables[name] ?: -1, value)
-                "Int"->gb.mm.varWriteInt(gb.variables[name]?:-1,value.toInt())
+                "String"->gb.mm.varWriteString(pcb.pid,name,value)
+                "Int"->gb.mm.varWriteInt(pcb.pid,name,value.toInt())
             }
         }
     }
