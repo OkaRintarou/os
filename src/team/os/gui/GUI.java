@@ -367,6 +367,7 @@ public class GUI extends JFrame {
             if(pidPro ==list_Process.get(j).pid){
                 list_Process.remove(j);
                 tableModel_Pro.removeRow(j);
+                break;
             }
         }
     }
@@ -378,6 +379,7 @@ public class GUI extends JFrame {
                 list_Process.get(j).state = statePro;
                 list_Process.get(j).ID_now = ID_nowPro;
                 list_Process.get(j).all_ins = all_insPro;
+                break;
             }
         }
         tableModel_Pro.setRowCount(0);
@@ -395,18 +397,16 @@ public class GUI extends JFrame {
             if(uidMem ==list_Memory.get(j).uid){
                 list_Memory.remove(j);
                 tableModel_Mem.removeRow(j);
+                break;
             }
         }
     }
 
-    public void modList_Memory(String nameMem, String typeMem, int sizeMem, String countMem, int pidMem, int uidMem){
+    public void modList_Memory(String countMem, int uidMem){
         for (int j = 0; j < list_Memory.size(); j++) {
             if(uidMem == list_Memory.get(j).uid){
-                list_Memory.get(j).name = nameMem;
-                list_Memory.get(j).type = typeMem;
-                list_Memory.get(j).size = sizeMem;
                 list_Memory.get(j).count = countMem;
-                list_Memory.get(j).pid = pidMem;
+                break;
             }
         }
         tableModel_Mem.setRowCount(0);
