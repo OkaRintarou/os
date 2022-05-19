@@ -1,6 +1,5 @@
 package team.os.memoryManager;
 
-import javax.sound.midi.Soundbank;
 import java.util.*;
 
 public class TestMemory {
@@ -8,9 +7,9 @@ public class TestMemory {
         MemoryManager memManage = new MemoryManager();
         int pid;
         int pSize;
+        String varName;
         String varType;
         int varSize;
-        int varId;
         String varValue;
         List<Partition> memList;
         int code = 0;
@@ -40,41 +39,46 @@ public class TestMemory {
                     break;
                 // 声明变量
                 case 3:
-                    System.out.print("Input pid & varType <& varSize>: ");
+                    System.out.print("Input pid & varName & varType <& varSize>: ");
                     pid = scanner.nextInt();
+                    varName = scanner.next();
                     varType = scanner.next();
                     if (varType.equals("Int"))
-                        memManage.varDeclare(pid, varType);
+                        memManage.varDeclare(pid, varName, varType);
                     else {
                         varSize = scanner.nextInt();
-                        memManage.varDeclare(pid, varType, varSize);
+                        memManage.varDeclare(pid, varName, varType, varSize);
                     }
                     break;
                 // 读String变量
                 case 4:
-                    System.out.print("Input varId: ");
-                    varId = scanner.nextInt();
-                    System.out.println("The value is \"" + memManage.varReadString(varId) + "\"");
+                    System.out.print("Input pid & varName: ");
+                    pid = scanner.nextInt();
+                    varName = scanner.next();
+                    System.out.println("The value is \"" + memManage.varReadString(pid, varName) + "\"");
                     break;
                 // 写String变量
                 case 5:
-                    System.out.print("Input varId & varValue: ");
-                    varId = scanner.nextInt();
+                    System.out.print("Input pid & varName & varValue: ");
+                    pid = scanner.nextInt();
+                    varName = scanner.next();
                     varValue = scanner.next();
-                    memManage.varWriteString(varId, varValue);
+                    memManage.varWriteString(pid, varName, varValue);
                     break;
                 // 读Int变量
                 case 6:
-                    System.out.println("Input varId: ");
-                    varId = scanner.nextInt();
-                    System.out.println("The value is \"" + memManage.varReadInt(varId) + "\"");
+                    System.out.println("Input pid & varName: ");
+                    pid = scanner.nextInt();
+                    varName = scanner.next();
+                    System.out.println("The value is \"" + memManage.varReadInt(pid, varName) + "\"");
                     break;
                 // 写Int变量
                 case 7:
-                    System.out.println("Input varId & varValue: ");
-                    varId = scanner.nextInt();
+                    System.out.print("Input pid & varName & varValue: ");
+                    pid = scanner.nextInt();
+                    varName = scanner.next();
                     varValue = scanner.next();
-                    memManage.varWriteInt(varId, Integer.parseInt(varValue));
+                    memManage.varWriteInt(pid, varName, Integer.parseInt(varValue));
                     break;
                 // 获取整个内存
                 case 8:
