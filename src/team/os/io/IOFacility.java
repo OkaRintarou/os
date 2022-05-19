@@ -1,5 +1,7 @@
 package team.os.io;
 
+import team.os.global.Global;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -18,14 +20,23 @@ public class IOFacility
     public void getFacility()
     {
         facilityTotalNumberChart.add("Printer1");
+        Global.INSTANCE.getGui().addList_IO("Printer1","空闲");
         facilityTotalNumberChart.add("Printer2");
+        Global.INSTANCE.getGui().addList_IO("Printer2","空闲");
         facilityTotalNumberChart.add("Printer3");
+        Global.INSTANCE.getGui().addList_IO("Printer3","空闲");
         facilityTotalNumberChart.add("Printer4");
+        Global.INSTANCE.getGui().addList_IO("Printer4","空闲");
         facilityTotalNumberChart.add("Printer5");
+        Global.INSTANCE.getGui().addList_IO("Printer5","空闲");
         facilityTotalNumberChart.add("Printer6");
-        facilityTotalNumberChart.add("Keyboard7");
-        facilityTotalNumberChart.add("Keyboard8");
-        facilityTotalNumberChart.add("Keyboard9");
+        Global.INSTANCE.getGui().addList_IO("Printer6","空闲");
+        facilityTotalNumberChart.add("Keyboard1");
+        Global.INSTANCE.getGui().addList_IO("Keyboard1","空闲");
+        facilityTotalNumberChart.add("Keyboard2");
+        Global.INSTANCE.getGui().addList_IO("Keyboard2","空闲");
+        facilityTotalNumberChart.add("Keyboard3");
+        Global.INSTANCE.getGui().addList_IO("Keyboard3","空闲");
     }
     //设备占用表用于记录设备被进程占用的情况
     List<Integer>facilityOccupiedChart=new ArrayList<>();

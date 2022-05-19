@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GUI extends JFrame {
     private JPanel contentPane;//主界面
@@ -84,12 +85,7 @@ public class GUI extends JFrame {
 
 
     public ArrayList<String> getInsString() {
-        // TODO: 2022/5/9
-        ArrayList<String> list = new ArrayList<>();
-        list.add("VarPrint v1 String");
-        list.add("VarPrint v1 String");
-        list.add("VarPrint v1 String");
-        return list;
+        return brokerMethod();
     }
 
     public void print(String msg) {
@@ -111,33 +107,10 @@ public class GUI extends JFrame {
         list_IMP();
     }
 
-    public void brokerMethod() {
-        JFrame frameBro = new JFrame("delete");
-        JTextArea textAreaIns = new JTextArea(null,5,16);
-        JPanel jpIns = new JPanel();
-        JPanel jpButton = new JPanel();
-        frameBro.setBounds(750, 400, 400, 250);
-        JLabel labelIns = new JLabel("指令");
-        JButton buttonOK = new JButton("确定");
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                brokerMethodInput(frameBro,textAreaIns);
-            }
-        });
-        JButton buttonCan = new JButton("取消");
-        buttonCan.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                frameBro.dispose();
-            }
-        });
-        jpIns.add(labelIns);
-        jpIns.add(textAreaIns);
-        jpButton.add(buttonOK);
-        jpButton.add(buttonCan);
-        frameBro.add(jpIns, BorderLayout.NORTH);
-        frameBro.add(jpButton, BorderLayout.SOUTH);
-        frameBro.setVisible(true);
-        frameBro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    public ArrayList<String> brokerMethod() {
+        String str=JOptionPane.showInputDialog(null,"brokerMethod","Bro",1);
+        String[] split = str.split("#");
+        return new ArrayList<>(Arrays.asList(split));
     }
 
     protected void createProcess(ActionEvent e) {
@@ -379,13 +352,6 @@ public class GUI extends JFrame {
         }
     }//删除进程窗口确定键触发器中函数
 
-    public void brokerMethodInput(JFrame frame,JTextArea Area){
-        JFrame frameBro = frame;
-        JTextArea textArea = Area;
-        textArea.getText();
-        //TODO:后续添加具体操作
-    }
-
     public void addList_Process(int pidPro, String namePro, Process.ProcessStates statePro, int ID_nowPro, int all_insPro){
         list_Process.add(new KeyValuePair_Process(pidPro,namePro,statePro,ID_nowPro,all_insPro));
         tableModel_Pro.addRow(new Object[]{list_Process.get(iPro -1).pid,list_Process.get(iPro -1).name,list_Process.get(iPro -1).state,list_Process.get(iPro -1).ID_now,list_Process.get(iPro -1).all_ins});
@@ -446,6 +412,7 @@ public class GUI extends JFrame {
     public void addList_IO(String nameIO, String stateIO){
         list_IO.add(new KeyValuePair_IO(nameIO,stateIO));
         tableModel_IO.addRow(new Object[]{list_IO.get(iIO -1).name,list_IO.get(iIO -1).state});
+        iIO++;
     }
 
     public void subList_IO(String nameIO){
@@ -474,6 +441,5 @@ public class GUI extends JFrame {
         count_cyc = Integer.parseInt(text1.getText());
         count_cor = Integer.parseInt(text2.getText());
         Global.INSTANCE.exec(count_cyc, count_cor);
-        //TODO: 后续应该更新表格
     }//执行窗口确定键触发器中函数
 }
