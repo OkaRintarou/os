@@ -88,14 +88,19 @@ public class IOFacilityManagement {
 
     public static void main(String[] args)
     {
-        IOFacilityManagement dome = Global.INSTANCE.getIo();
+        IOFacilityManagement dome =new IOFacilityManagement();
+        dome.init();
         System.out.println("Facility:"+dome.test0.facilityTotalNumberChart);
         System.out.println("State:"+dome.test0.stateChart);
-        dome.IOFacilityRequest("printer",1010,"1234444");
-        dome.IOFacilityRequest("keyboard",1010,"1234444");
-        dome.IOFacilityRequest("keyboard",1010,"1234444");
-        dome.IOFacilityRequest("keyboard",1010,"1234444");
-        System.out.println("State:"+dome.test0.stateChart  );
+        dome.IOFacilityRequst("printer",1010,"1234444");
+        System.out.println("request printer State:"+dome.test0.stateChart);
+        dome.IOFacilityRequst("keyboard",1010,"1234444");
+        System.out.println("request keyboard State:"+dome.test0.stateChart);
+        dome.IOFacilityRequst("keyboard",1010,"1234444");
+        System.out.println("request keyboard State:"+dome.test0.stateChart);
+        dome.IOFacilityRequst("keyboard",1010,"1234444");
+        System.out.println("request keyboard State:"+dome.test0.stateChart);
+        //System.out.println("State:"+dome.test0.stateChart  );
     }
 
 }
