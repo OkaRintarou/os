@@ -12,7 +12,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class GUI extends JFrame {
     private JPanel contentPane;//主界面
@@ -21,9 +20,11 @@ public class GUI extends JFrame {
     private JTable tableMemory;//内存表格
     DefaultTableModel tableModel_Pro;
     DefaultTableModel tableModel_Mem;
+    DefaultTableModel tableModel_IO;
 
     int iPro = 1;
     int iMem = 1;
+    int iIO = 1;
 
     String proName;//进程名
     String fileName;//文件名
@@ -83,9 +84,12 @@ public class GUI extends JFrame {
 
 
     public ArrayList<String> getInsString() {
-        String str=brokerMethod();
-        String[] split = str.split("\n");
-        return new ArrayList<>(Arrays.asList(split));
+        // TODO: 2022/5/9
+        ArrayList<String> list = new ArrayList<>();
+        list.add("VarPrint v1 String");
+        list.add("VarPrint v1 String");
+        list.add("VarPrint v1 String");
+        return list;
     }
 
     public void print(String msg) {
@@ -107,8 +111,33 @@ public class GUI extends JFrame {
         list_IMP();
     }
 
-    public String brokerMethod() {
-        return JOptionPane.showInputDialog(null, "请输入：", "brokerMethod", JOptionPane.INFORMATION_MESSAGE);
+    public void brokerMethod() {
+        JFrame frameBro = new JFrame("delete");
+        JTextArea textAreaIns = new JTextArea(null,5,16);
+        JPanel jpIns = new JPanel();
+        JPanel jpButton = new JPanel();
+        frameBro.setBounds(750, 400, 400, 250);
+        JLabel labelIns = new JLabel("指令");
+        JButton buttonOK = new JButton("确定");
+        buttonOK.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                brokerMethodInput(frameBro,textAreaIns);
+            }
+        });
+        JButton buttonCan = new JButton("取消");
+        buttonCan.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frameBro.dispose();
+            }
+        });
+        jpIns.add(labelIns);
+        jpIns.add(textAreaIns);
+        jpButton.add(buttonOK);
+        jpButton.add(buttonCan);
+        frameBro.add(jpIns, BorderLayout.NORTH);
+        frameBro.add(jpButton, BorderLayout.SOUTH);
+        frameBro.setVisible(true);
+        frameBro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     protected void createProcess(ActionEvent e) {
@@ -132,7 +161,7 @@ public class GUI extends JFrame {
         JPanel jpCyc = new JPanel();
         JPanel jpCor = new JPanel();
         JPanel jpButton = new JPanel();
-        frameACT.setSize(400, 200);
+        frameACT.setBounds(750, 400, 400, 250);
         JLabel labelCyc = new JLabel("周期数");
         JLabel labelCor = new JLabel("核心数");
         JButton buttonOK = new JButton("确定");
@@ -168,7 +197,7 @@ public class GUI extends JFrame {
         JPanel jpPro = new JPanel();
         JPanel jpFile = new JPanel();
         JPanel jpButton = new JPanel();
-        frameCRE.setSize(400, 200);
+        frameCRE.setBounds(750, 400, 400, 250);
         JLabel labelPro = new JLabel("进程名");
         JLabel labelFile = new JLabel("文件名");
         JButton buttonOK = new JButton("确定");
@@ -201,7 +230,7 @@ public class GUI extends JFrame {
         JTextField textFieldPid = new JTextField(16);
         JPanel jpPid = new JPanel();
         JPanel jpButton = new JPanel();
-        frameDEL.setSize(400, 200);
+        frameDEL.setBounds(750, 400, 400, 250);
         JLabel labelPid = new JLabel("进程pid");
         JButton buttonOK = new JButton("确定");
         buttonOK.addActionListener(new ActionListener() {
@@ -305,15 +334,15 @@ public class GUI extends JFrame {
     }
 
     void list_IO() {
-        DefaultTableModel tableModel = (DefaultTableModel) tableIO.getModel();
-        tableModel.setColumnIdentifiers(new Object[]{"设备名称", "设备状态"});
-        for (KeyValuePair_IO p : list_IO) tableModel.addRow(new Object[]{p.name, p.state});
+        tableModel_IO = (DefaultTableModel) tableIO.getModel();
+        tableModel_IO.setColumnIdentifiers(new Object[]{"设备名称", "设备状态"});
+        for (KeyValuePair_IO p : list_IO) tableModel_IO.addRow(new Object[]{p.name, p.state});
         tableIO.setRowHeight(30);
-        tableIO.setModel(tableModel);
+        tableIO.setModel(tableModel_IO);
     }
 
     void list_data() {
-        list_IO.add(new KeyValuePair_IO("鼠标", "true"));
+
     }
 
     void create_input(JFrame frame, JTextField text1, JTextField text2) {
@@ -339,20 +368,25 @@ public class GUI extends JFrame {
             for (int j = 0; j < list_Process.size(); j++) {
                 if (pid_DEL == list_Process.get(j).pid) {
                     Global.INSTANCE.killProcess(pid_DEL);
-                    list_Process.remove(j);
-                    tableModel_Pro.removeRow(j);
-                    JOptionPane.showMessageDialog(panel, "删除进程成功。");
+                    JOptionPane.showMessageDialog(null, "删除进程成功。");
                     break;
                 } else if (j == list_Process.size() - 1) {
-                    JOptionPane.showMessageDialog(panel, "未找到所输入pid所对应的进程！", "警告", 2);
+                    JOptionPane.showMessageDialog(null, "未找到所输入pid所对应的进程！", "警告", 2);
                 }
             }
         } else {
-            JOptionPane.showMessageDialog(panel, "没有正在运行的进程！", "警告", 2);
+            JOptionPane.showMessageDialog(null, "没有正在运行的进程！", "警告", 2);
         }
     }//删除进程窗口确定键触发器中函数
 
-     public void addList_Process(int pidPro, String namePro, Process.ProcessStates statePro, int ID_nowPro, int all_insPro){
+    public void brokerMethodInput(JFrame frame,JTextArea Area){
+        JFrame frameBro = frame;
+        JTextArea textArea = Area;
+        textArea.getText();
+        //TODO:后续添加具体操作
+    }
+
+    public void addList_Process(int pidPro, String namePro, Process.ProcessStates statePro, int ID_nowPro, int all_insPro){
         list_Process.add(new KeyValuePair_Process(pidPro,namePro,statePro,ID_nowPro,all_insPro));
         tableModel_Pro.addRow(new Object[]{list_Process.get(iPro -1).pid,list_Process.get(iPro -1).name,list_Process.get(iPro -1).state,list_Process.get(iPro -1).ID_now,list_Process.get(iPro -1).all_ins});
         iPro++;
@@ -407,6 +441,32 @@ public class GUI extends JFrame {
         }
         tableModel_Mem.setRowCount(0);
         list_Memory();
+    }
+
+    public void addList_IO(String nameIO, String stateIO){
+        list_IO.add(new KeyValuePair_IO(nameIO,stateIO));
+        tableModel_IO.addRow(new Object[]{list_IO.get(iIO -1).name,list_IO.get(iIO -1).state});
+    }
+
+    public void subList_IO(String nameIO){
+        for (int j = 0; j < list_IO.size(); j++) {
+            if(nameIO.equals(list_IO.get(j).name)){
+                list_IO.remove(j);
+                tableModel_IO.removeRow(j);
+                break;
+            }
+        }
+    }
+
+    public void modList_IO(String nameIO, String stateIO){
+        for (int j = 0; j < list_IO.size(); j++) {
+            if(nameIO.equals(list_IO.get(j).name)){
+                list_IO.get(j).state = stateIO;
+                break;
+            }
+        }
+        tableModel_IO.setRowCount(0);
+        list_IO();
     }
 
     void action_update(JFrame frame, JTextField text1, JTextField text2) {
