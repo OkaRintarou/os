@@ -96,7 +96,7 @@ public class GUI extends JFrame {
     }
 
     public GUI() {
-        list_data();
+        //list_data();
         setTitle("Windose20"); //窗口标题
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //设置开关隐藏
         setBounds(500, 300, 1000, 450); //设置初始大小和位置
@@ -315,7 +315,6 @@ public class GUI extends JFrame {
     }
 
     void list_data() {
-        list_Memory.add(new KeyValuePair_Memory("1", "111",510,"haha",1,1));
         list_IO.add(new KeyValuePair_IO("鼠标", "true"));
     }
 
@@ -329,7 +328,6 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog(null, "输入错误！请重新输入。", "警告", 2);
         } else {
             Global.INSTANCE.createProcess(proName, fileName);
-            addList_Process(iPro,"lxh", Process.ProcessStates.READY,iPro,iPro);
             JOptionPane.showMessageDialog(null, "输入成功！");
             frameCRE.dispose();
         }
