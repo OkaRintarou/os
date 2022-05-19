@@ -356,57 +356,57 @@ public class GUI extends JFrame {
         }
     }//删除进程窗口确定键触发器中函数
 
-     public void addList_Process(int a, String b, Process.ProcessStates c, int d, int e){
-        list_Process.add(new KeyValuePair_Process(a,b,c,d,e));
+     public void addList_Process(int pidPro, String namePro, Process.ProcessStates statePro, int ID_nowPro, int all_insPro){
+        list_Process.add(new KeyValuePair_Process(pidPro,namePro,statePro,ID_nowPro,all_insPro));
         tableModel_Pro.addRow(new Object[]{list_Process.get(iPro -1).pid,list_Process.get(iPro -1).name,list_Process.get(iPro -1).state,list_Process.get(iPro -1).ID_now,list_Process.get(iPro -1).all_ins});
         iPro++;
     }
 
-    public void subList_Process(int a) {
+    public void subList_Process(int pidPro) {
         for (int j = 0; j < list_Process.size(); j++) {
-            if(a ==list_Process.get(j).pid){
+            if(pidPro ==list_Process.get(j).pid){
                 list_Process.remove(j);
                 tableModel_Pro.removeRow(j);
             }
         }
     }
 
-    public void modList_Process(int a, String b, Process.ProcessStates c, int d, int e){
+    public void modList_Process(int pidPro, String namePro, Process.ProcessStates statePro, int ID_nowPro, int all_insPro){
         for (int j = 0; j < list_Process.size(); j++) {
-            if(a == list_Process.get(j).pid){
-                list_Process.get(j).name = b;
-                list_Process.get(j).state = c;
-                list_Process.get(j).ID_now = d;
-                list_Process.get(j).all_ins = e;
+            if(pidPro == list_Process.get(j).pid){
+                list_Process.get(j).name = namePro;
+                list_Process.get(j).state = statePro;
+                list_Process.get(j).ID_now = ID_nowPro;
+                list_Process.get(j).all_ins = all_insPro;
             }
         }
         tableModel_Pro.setRowCount(0);
         list_Process();
     }
 
-    public void addList_Memory(String a, String b, int c, String d, int e, int f){
-        list_Memory.add(new KeyValuePair_Memory(a,b,c,d,e,f));
+    public void addList_Memory(String nameMem, String typeMem, int sizeMem, String countMem, int pidMem, int uidMem){
+        list_Memory.add(new KeyValuePair_Memory(nameMem,typeMem,sizeMem,countMem,pidMem,uidMem));
         tableModel_Mem.addRow(new Object[]{list_Memory.get(iMem -1).name,list_Memory.get(iMem -1).type,list_Memory.get(iMem -1).size,list_Memory.get(iMem -1).count,list_Memory.get(iMem -1).pid,list_Memory.get(iMem -1).uid});
         iMem++;
     }
 
-    public void subList_Memory(int a){
+    public void subList_Memory(int uidMem){
         for (int j = 0; j < list_Memory.size(); j++) {
-            if(a ==list_Memory.get(j).uid){
+            if(uidMem ==list_Memory.get(j).uid){
                 list_Memory.remove(j);
                 tableModel_Mem.removeRow(j);
             }
         }
     }
 
-    public void modList_Memory(int a, String b, String c, int d, String e, int f){
+    public void modList_Memory(String nameMem, String typeMem, int sizeMem, String countMem, int pidMem, int uidMem){
         for (int j = 0; j < list_Memory.size(); j++) {
-            if(a == list_Memory.get(j).uid){
-                list_Memory.get(j).name = b;
-                list_Memory.get(j).type = c;
-                list_Memory.get(j).size = d;
-                list_Memory.get(j).count = e;
-                list_Memory.get(j).pid = f;
+            if(uidMem == list_Memory.get(j).uid){
+                list_Memory.get(j).name = nameMem;
+                list_Memory.get(j).type = typeMem;
+                list_Memory.get(j).size = sizeMem;
+                list_Memory.get(j).count = countMem;
+                list_Memory.get(j).pid = pidMem;
             }
         }
         tableModel_Mem.setRowCount(0);
