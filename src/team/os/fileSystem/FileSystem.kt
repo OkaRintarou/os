@@ -7,7 +7,7 @@ import kotlin.experimental.xor
 class FileSystem() : IFileSystem {
     private val disk : File
     private val diskAccessor : RandomAccessFile
-    val diskInfo : DiskInformation
+    private val diskInfo : DiskInformation
     private val recordBitmap : ByteArray
     private val dataBitmap : ByteArray
     private val fileDescriptorList : ArrayList<FileDescriptor>
