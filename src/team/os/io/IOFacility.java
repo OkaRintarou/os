@@ -23,9 +23,9 @@ public class IOFacility
         facilityTotalNumberChart.add("Printer4");
         facilityTotalNumberChart.add("Printer5");
         facilityTotalNumberChart.add("Printer6");
-        facilityTotalNumberChart.add("Keyboard1");
-        facilityTotalNumberChart.add("Keyboard2");
-        facilityTotalNumberChart.add("Keyboard3");
+        facilityTotalNumberChart.add("Keyboard7");
+        facilityTotalNumberChart.add("Keyboard8");
+        facilityTotalNumberChart.add("Keyboard9");
     }
     //设备占用表用于记录设备被进程占用的情况
     List<Integer>facilityOccupiedChart=new ArrayList<>();
