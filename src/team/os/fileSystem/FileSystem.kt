@@ -837,6 +837,8 @@ class FileSystem() : IFileSystem {
     override fun fileOpen(filePath: String) : FileHandle {
         val id : Int = parsePathForRecordID(filePath)
         if (id == -1) return -1 //给定的文件不存在
+        val record : FileRecord = getFileRecordFromID(id)
+        if (record.fileType == 0) return -1 //文件夹不能被打开
         for (i in fileDescriptorList.indices) {
             if (fileDescriptorList[i].fileID == id) { //文件已经被打开，系统中留有句柄
                 fileDescriptorList[i].counter++
@@ -1020,6 +1022,9 @@ class FileSystem() : IFileSystem {
     override fun getAllRecordNameInFolderByName(name : String) : ArrayList<Pair<Int, String>> {
         val folderID : Int = parsePathForRecordID(name)
         val folderRecord : FileRecord = getFileRecordFromID(folderID)
+        if (folderRecord.fileType != 0) { //不是文件夹
+            return ArrayList(0)
+        }
         return getAllRecordNameInFolder(folderRecord)
     }
 }//End of team.os.FileSystem.FileSystem
