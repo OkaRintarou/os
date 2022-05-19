@@ -54,7 +54,7 @@ public class IOFacilityManagement {
                 size/=2;
             facilityRest.add(size);
             //System.out.println(temp );
-            IOFacilityRelease("printer",temp);
+            //IOFacilityRelease("printer",temp);
         }
 
         return facilityRest;
