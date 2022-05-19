@@ -1,0 +1,5 @@
+VarDeclare str String 3
+VarWrite str 1234567890 String
+Broker
+HwAccess printer str io0
+HwRelease printer io0

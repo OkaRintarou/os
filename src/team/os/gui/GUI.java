@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GUI extends JFrame {
     private JPanel contentPane;//主界面
@@ -82,12 +83,9 @@ public class GUI extends JFrame {
 
 
     public ArrayList<String> getInsString() {
-        // TODO: 2022/5/9
-        ArrayList<String> list = new ArrayList<>();
-        list.add("VarPrint v1 String");
-        list.add("VarPrint v1 String");
-        list.add("VarPrint v1 String");
-        return list;
+        String str=brokerMethod();
+        String[] split = str.split("\n");
+        return new ArrayList<>(Arrays.asList(split));
     }
 
     public void print(String msg) {
@@ -109,8 +107,8 @@ public class GUI extends JFrame {
         list_IMP();
     }
 
-    public void brokerMethod() {
-        JOptionPane.showInputDialog(null, "请输入：", "brokerMethod", JOptionPane.INFORMATION_MESSAGE);
+    public String brokerMethod() {
+        return JOptionPane.showInputDialog(null, "请输入：", "brokerMethod", JOptionPane.INFORMATION_MESSAGE);
     }
 
     protected void createProcess(ActionEvent e) {
