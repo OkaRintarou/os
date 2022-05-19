@@ -112,32 +112,7 @@ public class GUI extends JFrame {
     }
 
     public void brokerMethod() {
-        JFrame frameBro = new JFrame("delete");
-        JTextArea textAreaIns = new JTextArea(null,5,16);
-        JPanel jpIns = new JPanel();
-        JPanel jpButton = new JPanel();
-        frameBro.setBounds(750, 400, 400, 250);
-        JLabel labelIns = new JLabel("指令");
-        JButton buttonOK = new JButton("确定");
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                brokerMethodInput(frameBro,textAreaIns);
-            }
-        });
-        JButton buttonCan = new JButton("取消");
-        buttonCan.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                frameBro.dispose();
-            }
-        });
-        jpIns.add(labelIns);
-        jpIns.add(textAreaIns);
-        jpButton.add(buttonOK);
-        jpButton.add(buttonCan);
-        frameBro.add(jpIns, BorderLayout.NORTH);
-        frameBro.add(jpButton, BorderLayout.SOUTH);
-        frameBro.setVisible(true);
-        frameBro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        JOptionPane.showInputDialog(null,"brokerMethod","Bro",1);
     }
 
     protected void createProcess(ActionEvent e) {
@@ -378,13 +353,6 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog(null, "没有正在运行的进程！", "警告", 2);
         }
     }//删除进程窗口确定键触发器中函数
-
-    public void brokerMethodInput(JFrame frame,JTextArea Area){
-        JFrame frameBro = frame;
-        JTextArea textArea = Area;
-        textArea.getText();
-        //TODO:后续添加具体操作
-    }
 
     public void addList_Process(int pidPro, String namePro, Process.ProcessStates statePro, int ID_nowPro, int all_insPro){
         list_Process.add(new KeyValuePair_Process(pidPro,namePro,statePro,ID_nowPro,all_insPro));
