@@ -171,8 +171,7 @@ public class MemoryManager implements IMemoryManager {
                 System.out.println("Write successfully for varId:" + varID + " ,value is " + varValue);
             } else
                 System.out.println("\33[31m" + "Error: Variable " + varID + " is not int!" + "\33[0m");
-            // todo
-            Global.INSTANCE.getGui().modList_Memory(varName, "Int", 4, Integer.toString(varValue), pid, varID);
+            Global.INSTANCE.getGui().modList_Memory(Integer.toString(varValue), varID);
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("\33[31;4m" + "\tCannot write a variable which doesn't exist!" + "\33[0m");
@@ -195,8 +194,7 @@ public class MemoryManager implements IMemoryManager {
                 System.out.println("Write successfully for varId:" + varID + " ,value is " + realValue);
             } else
                 System.out.println("\33[31m" + "Error: Variable " + varID + " is not String!" + "\33[0m");
-            // todo
-            Global.INSTANCE.getGui().modList_Memory(varName, "String", 4, varValue, pid, varID);
+            Global.INSTANCE.getGui().modList_Memory(varValue, varID);
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("\33[31;4m" + "\tCannot write a variable which doesn't exist!" + "\33[0m");
