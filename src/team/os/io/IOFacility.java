@@ -58,7 +58,7 @@ public class IOFacility
         stateChart.set(a,1);
     }
     //返回设备资源表到ui
-    public List facilityRest(int signal)
+    public List<Integer> facilityRest(int signal)
     {
         List<Integer>facilityOccupied=new ArrayList<>();
         for(int i=0;i<stateChart.size();i++)
