@@ -1,0 +1,25 @@
+VarDeclare str String 10
+VarWrite str 12345678 String
+VarPrint str String
+HwAccess printer str 1
+HwAccess printer str 2
+HwAccess printer str 3
+HwAccess printer str 4
+HwAccess printer str 5
+HwAccess printer str 6
+HwAccess printer str 7
+HwAccess keyboard 0 k1
+HwAccess keyboard 0 k2
+HwAccess keyboard 0 k3
+HwAccess keyboard 0 k4
+HwRelease printer 1
+HwRelease printer 2
+HwRelease printer 3
+HwRelease printer 4
+HwRelease printer 5
+HwRelease printer 6
+HwRelease printer 7
+HwRelease keyboard k1
+HwRelease keyboard k2
+HwRelease keyboard k3
+HwRelease keyboard k4

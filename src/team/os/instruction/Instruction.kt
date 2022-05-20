@@ -87,10 +87,22 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         private val taskID: String
     ) : Instruction(pcb, gb) {
         override fun invoke() {
+            if(type=="keyboard"){
+                val index=gb.io.IOFacilityRequest(type,0,"")[0]
+                if (index==-1){
+                    println("分配失败 taskID:$taskID")
+                    return
+                }
+                gb.tmpIntMap[taskID]=index
+                return
+            }
             VarPrint(pcb, gb, varName, "String", false)()
             val content = gb.tmpStrMap[varName] ?: ""
             val list = gb.io.IOFacilityRequest(type, content.length, content)
-            if (list[0] == -1) return
+            if (list[0] == -1) {
+                println("分配失败 taskID:$taskID")
+                return
+            }
             gb.tmpIntMap[taskID] = list[0]
             if (list.size == 2)
                 gb.pm.blockProcess(list[1])
@@ -192,19 +204,19 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
 
 
     /**
-     * 整形加法，运算结果写入寄存器$result
+     * 整形加法
      * @property o1 变量1
      * @property o2 变量2
      *
      * @param pcb PCB
      */
-    class Add(pcb: PCB, gb: GlobalModules, private val o1: String, private val o2: String, private val r: String) :
+    class Add(pcb: PCB, gb: GlobalModules, private val o1: String, private val o2: String, private val o3: String) :
         Instruction(pcb, gb) {
         override fun invoke() {
             VarPrint(pcb, gb, o1, "Int", false)()
             VarPrint(pcb, gb, o2, "Int", false)()
             val result = (gb.tmpIntMap[o1] ?: -1) + (gb.tmpIntMap[o2] ?: -1)
-            VarWrite(pcb, gb, r, result.toString(), "Int")()
+            VarWrite(pcb, gb, o3, result.toString(), "Int")()
         }
     }
 
@@ -228,7 +240,7 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
     class StrToInt(pcb: PCB, gb: GlobalModules, private val o1: String, private val o2: String) : Instruction(pcb, gb) {
         override fun invoke() {
             VarPrint(pcb, gb, o1, "String", false)()
-            val r = gb.tmpStrMap[o1] ?: ""
+            val r = gb.tmpStrMap[o1] ?: "0"
             VarWrite(pcb, gb, o2, r, "Int")()
         }
     }
@@ -236,8 +248,8 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
     class IntToStr(pcb: PCB, gb: GlobalModules, private val o1: String, private val o2: String) : Instruction(pcb, gb) {
         override fun invoke() {
             VarPrint(pcb, gb, o1, "Int", false)()
-            val r = gb.tmpIntMap[o1] ?: -1
-            VarWrite(pcb, gb, o2, r.toString(), "Int")()
+            val r = gb.tmpIntMap[o1] ?: 0
+            VarWrite(pcb, gb, o2, r.toString(), "String")()
         }
     }
 

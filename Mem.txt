@@ -1,0 +1,17 @@
+VarDeclare i1 Int 4
+VarDeclare i2 Int 4
+VarDeclare s1 String 10
+VarPrint i1 Int
+VarPrint s1 String
+VarWrite s1 10 String
+VarPrint s1 String
+StrToInt s1 i1
+VarPrint i1 Int
+VarWrite s1 -2 String
+VarPrint s1 String
+StrToInt s1 i2
+VarPrint i2 Int
+Add i1 i2 i1
+VarPrint i1 Int
+IntToStr i1 s1
+VarPrint s1 String

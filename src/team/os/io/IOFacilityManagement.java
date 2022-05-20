@@ -70,14 +70,20 @@ public class IOFacilityManagement {
 
     //对IO设备释放应答
     public int IOFacilityRelease(String type, int index) {
-        if (index == -1 || index >= test0.stateChart.size()) return 0;
+        if (index == -1 || index > test0.stateChart.size()){
+            System.out.println("Release Fault "+index);
+            return 0;
+        }
         if (test0.stateChart.get(index - 1) == 1) {
             test0.stateChart.set(index - 1, 0);//改变当前设备状态
             Global.INSTANCE.getGui().modList_IO(test0.facilityTotalNumberChart.get(index-1),"空闲");
-            System.out.println("From io: release " + (index - 1));
+            System.out.println("From io: release " + index );
             return 1;
-        } else
+        } else{
+            System.out.println("Release Fault "+index);
             return 0;
+        }
+
     }
 
 }

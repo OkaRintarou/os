@@ -1,0 +1,5 @@
+CreateProcess root 0.txt
+Block 13
+SendMsg root test_from_Process.txt
+Block 2
+Exit
