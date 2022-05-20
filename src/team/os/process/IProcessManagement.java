@@ -13,7 +13,7 @@ public interface IProcessManagement {
     int createProcess(String processName, String filePath);
 
     /**
-     * 终止当前运行态进程
+     * 终止进程
      * @param pid 进程标识符
      */
     void terminateProcess(int pid);
