@@ -1,4 +1,4 @@
-VarDeclare str String 3
+VarDeclare str String 30
 VarWrite str 1234567890 String
 Broker
 HwAccess printer str io0
