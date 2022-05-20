@@ -237,6 +237,9 @@ public class MemoryManager implements IMemoryManager {
             if (size == null) {
                 System.out.println("\33[31m" + "Error: A string var must have a size!!!" + "\33[0m");
                 return -1;
+            } else if (size[0] <= 0) {
+                System.out.println("\33[31m" + "Error: String size must be a positive number!!!" + "\33[0m");
+                return -1;
             } else
                 varSize = size[0];
         } else if (!varType.equals("Int")) {
