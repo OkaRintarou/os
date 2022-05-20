@@ -2,8 +2,10 @@ VarDeclare fs String 100
 VarDeclare a String 100
 VarWrite fs test_String_nothing_important_aaaaaa_bbbbbb_ccccc_ddddd String
 VarPrint fs String
-FileCreate /fs.txt
-FileWrite /fs.txt fs
-FileRead /fs.txt 10 a
+FolderCreate /a
+FileCreate /a/fs.txt
+FileWrite /a/fs.txt fs
+FileRead /a/fs.txt 10 a
 VarPrint a String
-FileDelete /fs.txt
+FileDelete /a/fs.txt
+FolderDelete /a

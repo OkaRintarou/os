@@ -68,6 +68,8 @@ class InstructionSet(private val fileName: String?, private val pcb: PCB, privat
                     "StrCat" -> StrCat(pcb, gb, it[1], it[2], it[3])
                     "StrToInt"->StrToInt(pcb,gb,it[1],it[2])
                     "IntToStr"->IntToStr(pcb,gb,it[1],it[2])
+                    "FolderCreate"->FolderCreate(pcb,gb,it[1])
+                    "FolderDelete"->FolderDelete(pcb,gb,it[1])
                     "FileCreate" -> FileCreate(pcb, gb, it[1])
                     "FileWrite" -> FileWrite(pcb, gb, it[1], it[2])
                     "FileDelete" -> FileDelete(pcb, gb, it[1])
@@ -85,7 +87,7 @@ class InstructionSet(private val fileName: String?, private val pcb: PCB, privat
     private var pointer: Int = 0
 
     fun getPointer(): Int {
-        return pointer;
+        return pointer
     }
     /**
      * 执行当前指令并指向下一条指令

@@ -265,6 +265,17 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         }
     }
 
+    class FolderCreate(pcb:PCB,gb:GlobalModules,private val name:String):Instruction(pcb,gb){
+        override fun invoke() {
+            gb.fs.folderCreate(name)
+        }
+    }
+    class FolderDelete(pcb:PCB,gb:GlobalModules,private val name:String):Instruction(pcb,gb){
+        override fun invoke() {
+            gb.fs.folderDelete(name)
+        }
+    }
+
     /**
      * 写入文件，直接覆盖
      * @property filename 文件名
