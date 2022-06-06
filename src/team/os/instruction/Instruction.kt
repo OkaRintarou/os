@@ -40,6 +40,33 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         }
     }
 
+    class GetProductNum(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
+        override fun invoke() {
+            val productNumber = gb.pm.productNumber
+            Global.gui.print("Product count: $productNumber")
+        }
+    }
+
+    class AddProduct(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
+        override fun invoke() {
+            gb.pm.addProduct()
+            Global.gui.print("Add product from pid: ${pcb.pid}")
+        }
+    }
+
+    class SubProduct(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
+        override fun invoke() {
+            gb.pm.subProduct()
+            Global.gui.print("Request to sub product from pid: ${pcb.pid}")
+        }
+    }
+
+    class CheckProduct(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
+        override fun invoke() {
+            Global.gui.print("Get product from pid: ${pcb.pid}")
+        }
+    }
+
     /**
      * Send msg
      *
@@ -87,13 +114,13 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         private val taskID: String
     ) : Instruction(pcb, gb) {
         override fun invoke() {
-            if(type=="keyboard"){
-                val index=gb.io.IOFacilityRequest(type,0,"")[0]
-                if (index==-1){
+            if (type == "keyboard") {
+                val index = gb.io.IOFacilityRequest(type, 0, "")[0]
+                if (index == -1) {
                     println("分配失败 taskID:$taskID")
                     return
                 }
-                gb.tmpIntMap[taskID]=index
+                gb.tmpIntMap[taskID] = index
                 return
             }
             VarPrint(pcb, gb, varName, "String", false)()
@@ -265,12 +292,13 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         }
     }
 
-    class FolderCreate(pcb:PCB,gb:GlobalModules,private val name:String):Instruction(pcb,gb){
+    class FolderCreate(pcb: PCB, gb: GlobalModules, private val name: String) : Instruction(pcb, gb) {
         override fun invoke() {
             gb.fs.folderCreate(name)
         }
     }
-    class FolderDelete(pcb:PCB,gb:GlobalModules,private val name:String):Instruction(pcb,gb){
+
+    class FolderDelete(pcb: PCB, gb: GlobalModules, private val name: String) : Instruction(pcb, gb) {
         override fun invoke() {
             gb.fs.folderDelete(name)
         }

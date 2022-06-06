@@ -4,7 +4,6 @@ import team.os.global.Global;
 import team.os.instruction.InstructionSet;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 public final class ProcessManagement implements IProcessManagement {
     public static class Message {

@@ -25,20 +25,17 @@ import team.os.process.ProcessManagement
  * @property mm 内存管理模块
  * @property io 设备管理模块
  */
-class GlobalModules (
+class GlobalModules(
     val variables: HashMap<String, Int>,
-    val tmpIntMap:HashMap<String,Int>,
-    val tmpStrMap:HashMap<String,String>,
+    val tmpIntMap: HashMap<String, Int>,
+    val tmpStrMap: HashMap<String, String>,
     val pm: ProcessManagement,
     val fs: IFileSystem,
     val mm: IMemoryManager,
     val io: IOFacilityManagement,
-    val im:InterruptionManagement
-){
-    fun copy()=GlobalModules(
-        HashMap(),
-        HashMap(),
-        HashMap(),
-        pm,fs,mm,io,im
+    val im: InterruptionManagement
+) {
+    fun copy() = GlobalModules(
+        HashMap(), HashMap(), HashMap(), pm, fs, mm, io, im
     )
 }

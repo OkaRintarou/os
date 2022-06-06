@@ -19,14 +19,7 @@ object Global {
     val pm: ProcessManagement = ProcessManagement.getInstance()
     val insSetFactory: InsSetFactory = InsSetFactory(
         GlobalModules(
-            hashMapOf(),
-            hashMapOf(),
-            hashMapOf(),
-            pm,
-            fs,
-            mm,
-            io,
-            im
+            hashMapOf(), hashMapOf(), hashMapOf(), pm, fs, mm, io, im
         )
     )
 
@@ -39,7 +32,6 @@ object Global {
     }
 
     fun exec(cycle: Int, core: Int) {
-        for (i in 0 until cycle)
-            pm.singleRoundExecution(core)
+        for (i in 0 until cycle) pm.singleRoundExecution(core)
     }
 }

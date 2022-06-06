@@ -1,7 +1,6 @@
 package team.os.process;
 
 import team.os.global.Global;
-import team.os.instruction.InsSetFactory;
 import team.os.instruction.InstructionSet;
 import team.os.io.IOStuff;
 
@@ -156,14 +155,14 @@ public final class Process implements IProcess {
     @Override
     public void getMessage() {
         List<ProcessManagement.Message> temp = new ArrayList<>();
-        for (ProcessManagement.Message message: Global.INSTANCE.getPm().getMailBox()) {
+        for (ProcessManagement.Message message : Global.INSTANCE.getPm().getMailBox()) {
             if (message.dst == pcb.getPid()) {
                 temp.add(message);
                 pcb.messageList.add(message);
             }
         }
 
-        for (ProcessManagement.Message message: temp) {
+        for (ProcessManagement.Message message : temp) {
             Global.INSTANCE.getPm().getMailBox().remove(message);
         }
     }

@@ -14,7 +14,12 @@ import java.io.File
  * @property pcb 所属进程的PCB
  * @property gb 全局模块引用，需传入拷贝以维护专属活动变量
  */
-class InstructionSet(private val fileName: String?, private val pcb: PCB, private val gb: GlobalModules, pName:String) {
+class InstructionSet(
+    private val fileName: String?,
+    private val pcb: PCB,
+    private val gb: GlobalModules,
+    pName: String
+) {
     /**
      * 指令列表
      */
@@ -26,7 +31,7 @@ class InstructionSet(private val fileName: String?, private val pcb: PCB, privat
     val insCount get() = list.size
 
     init {
-        gb.tmpIntMap["p_$pName"]=pcb.pid
+        gb.tmpIntMap["p_$pName"] = pcb.pid
         val instructions: ArrayList<String> = if ((fileName == null) || fileName.isBlank()) {
             Global.gui.insString
         } else {
@@ -56,20 +61,24 @@ class InstructionSet(private val fileName: String?, private val pcb: PCB, privat
                 when (it[0]) {
                     "CreateProcess" -> CreateProcess(pcb, gb, it[1], it[2])
                     "KillProcess" -> KillProcess(pcb, gb, it[1])
+                    "GetProductNum" -> GetProductNum(pcb, gb)
+                    "AddProduct" -> AddProduct(pcb, gb)
+                    "SubProduct" -> SubProduct(pcb, gb)
+                    "CheckProduct" -> CheckProduct(pcb, gb)
                     "SendMsg" -> SendMsg(pcb, gb, it[1], it[2])
                     "GetMsg" -> GetMsg(pcb, gb)
                     "Block" -> Block(pcb, gb, it[1].toInt())
-                    "HwAccess" -> HwAccess(pcb, gb, it[1], it[2],it[3])
-                    "HwRelease" -> HwRelease(pcb, gb, it[1],it[2])
+                    "HwAccess" -> HwAccess(pcb, gb, it[1], it[2], it[3])
+                    "HwRelease" -> HwRelease(pcb, gb, it[1], it[2])
                     "VarDeclare" -> VarDeclare(pcb, gb, it[1], it[2], it[3].toInt())
                     "VarPrint" -> VarPrint(pcb, gb, it[1], it[2])
                     "VarWrite" -> VarWrite(pcb, gb, it[1], it[2], it[3])
                     "Add" -> Add(pcb, gb, it[1], it[2], it[3])
                     "StrCat" -> StrCat(pcb, gb, it[1], it[2], it[3])
-                    "StrToInt"->StrToInt(pcb,gb,it[1],it[2])
-                    "IntToStr"->IntToStr(pcb,gb,it[1],it[2])
-                    "FolderCreate"->FolderCreate(pcb,gb,it[1])
-                    "FolderDelete"->FolderDelete(pcb,gb,it[1])
+                    "StrToInt" -> StrToInt(pcb, gb, it[1], it[2])
+                    "IntToStr" -> IntToStr(pcb, gb, it[1], it[2])
+                    "FolderCreate" -> FolderCreate(pcb, gb, it[1])
+                    "FolderDelete" -> FolderDelete(pcb, gb, it[1])
                     "FileCreate" -> FileCreate(pcb, gb, it[1])
                     "FileWrite" -> FileWrite(pcb, gb, it[1], it[2])
                     "FileDelete" -> FileDelete(pcb, gb, it[1])
@@ -89,6 +98,7 @@ class InstructionSet(private val fileName: String?, private val pcb: PCB, privat
     fun getPointer(): Int {
         return pointer
     }
+
     /**
      * 执行当前指令并指向下一条指令
      *

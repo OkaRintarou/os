@@ -1,10 +1,10 @@
 package team.os.memoryManager;
 
-import java.util.*;
-
 import team.os.global.Global;
 import team.os.process.Process;
 import team.os.process.ProcessManagement;
+
+import java.util.*;
 
 public class MemoryManager implements IMemoryManager {
 

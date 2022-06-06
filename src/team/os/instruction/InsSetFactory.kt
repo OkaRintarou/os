@@ -13,5 +13,6 @@ class InsSetFactory(private val gb: GlobalModules) {
      * @param fileName 文件名，为空串、空白串或null时表示从键盘得到指令
      * @return 指令集的实例
      */
-    fun getInst(fileName: String?, pcb: Process.PCB,pName:String): InstructionSet = InstructionSet(fileName, pcb, gb.copy(),pName)
+    fun getInst(fileName: String?, pcb: Process.PCB, pName: String): InstructionSet =
+        InstructionSet(fileName, pcb, gb.copy(), pName)
 }

@@ -1,7 +1,7 @@
 package team.os.gui;
 
-import team.os.process.ProcessManagement;
 import team.os.process.Process;
+import team.os.process.ProcessManagement;
 
 import java.util.Arrays;
 
@@ -27,7 +27,7 @@ public class TestForProcessMailBox {
         processB.getMessage();
         System.out.println("共享邮箱:" + instance.getMailBox());
         System.out.println("B的消息:" + Arrays.toString(processB.showAllMessage()));
-        processB.sendMessage("A我是B",0);
+        processB.sendMessage("A我是B", 0);
         System.out.println("共享邮箱:" + instance.getMailBox());
         processA.getMessage();
         System.out.println("A的消息:" + Arrays.toString(processA.showAllMessage()));

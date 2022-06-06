@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GUI extends JFrame {
-    private JPanel contentPane;//主界面
+    private final JPanel contentPane;//主界面
     private JTable tableProcess;//进程表格
     private JTable tableIO;//IO设备表格
     private JTable tableMemory;//内存表格
@@ -42,7 +42,7 @@ public class GUI extends JFrame {
         public int ID_now;
         public int all_ins;
 
-        public KeyValuePair_Process(int first, String second, Process.ProcessStates third,int fourth,int fifth) {
+        public KeyValuePair_Process(int first, String second, Process.ProcessStates third, int fourth, int fifth) {
             pid = first;
             name = second;
             state = third;
@@ -108,21 +108,21 @@ public class GUI extends JFrame {
     }
 
     public ArrayList<String> brokerMethod() {
-        String str=JOptionPane.showInputDialog(null,"brokerMethod","Bro",1);
+        String str = JOptionPane.showInputDialog(null, "brokerMethod", "Bro", 1);
         String[] split = str.split("#");
         return new ArrayList<>(Arrays.asList(split));
     }
 
     protected void createProcess(ActionEvent e) {
-        tableModel_Pro= (DefaultTableModel) tableProcess.getModel();
-        tableModel_Pro.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态","当前指令序号","总指令条数"});
+        tableModel_Pro = (DefaultTableModel) tableProcess.getModel();
+        tableModel_Pro.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态", "当前指令序号", "总指令条数"});
         createProcess_Win();
         tableProcess.setRowHeight(30);
         tableProcess.setModel(tableModel_Pro);
     }//create button 触发器
 
     protected void deleteProcess(ActionEvent e) {
-        tableModel_Pro= (DefaultTableModel) tableProcess.getModel();    //获得表格模型
+        tableModel_Pro = (DefaultTableModel) tableProcess.getModel();    //获得表格模型
         deleteProcess_Win();
         tableProcess.setModel(tableModel_Pro);
     }//delete button 触发器
@@ -263,10 +263,10 @@ public class GUI extends JFrame {
                 actionProcess(e);
             }
         });
-        panel.add(scroll,BorderLayout.NORTH);
-        panel.add(buttonCRE,BorderLayout.SOUTH);
-        panel.add(buttonDEL,BorderLayout.SOUTH);
-        panel.add(buttonACT,BorderLayout.SOUTH);
+        panel.add(scroll, BorderLayout.NORTH);
+        panel.add(buttonCRE, BorderLayout.SOUTH);
+        panel.add(buttonDEL, BorderLayout.SOUTH);
+        panel.add(buttonACT, BorderLayout.SOUTH);
     }
 
     void list_IMP() {
@@ -292,16 +292,18 @@ public class GUI extends JFrame {
 
     private void list_Process() {
         tableModel_Pro = (DefaultTableModel) tableProcess.getModel();
-        tableModel_Pro.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态","当前指令序号","总指令条数"});
-        for (KeyValuePair_Process p : list_Process) tableModel_Pro.addRow(new Object[]{p.pid, p.name, p.state,p.ID_now,p.all_ins});
+        tableModel_Pro.setColumnIdentifiers(new Object[]{"进程ID", "进程名称", "进程状态", "当前指令序号", "总指令条数"});
+        for (KeyValuePair_Process p : list_Process)
+            tableModel_Pro.addRow(new Object[]{p.pid, p.name, p.state, p.ID_now, p.all_ins});
         tableProcess.setRowHeight(30);
         tableProcess.setModel(tableModel_Pro);
     }
 
     void list_Memory() {
         tableModel_Mem = (DefaultTableModel) tableMemory.getModel();
-        tableModel_Mem.setColumnIdentifiers(new Object[]{"变量名","变量类型","大小","值","pid","变量标识符"});
-        for (KeyValuePair_Memory p : list_Memory) tableModel_Mem.addRow(new Object[]{p.name,p.type,p.size,p.count,p.pid,p.uid});
+        tableModel_Mem.setColumnIdentifiers(new Object[]{"变量名", "变量类型", "大小", "值", "pid", "变量标识符"});
+        for (KeyValuePair_Memory p : list_Memory)
+            tableModel_Mem.addRow(new Object[]{p.name, p.type, p.size, p.count, p.pid, p.uid});
         tableMemory.setRowHeight(30);
         tableMemory.setModel(tableModel_Mem);
     }
@@ -352,15 +354,15 @@ public class GUI extends JFrame {
         }
     }//删除进程窗口确定键触发器中函数
 
-    public void addList_Process(int pidPro, String namePro, Process.ProcessStates statePro, int ID_nowPro, int all_insPro){
-        list_Process.add(new KeyValuePair_Process(pidPro,namePro,statePro,ID_nowPro,all_insPro));
-        tableModel_Pro.addRow(new Object[]{list_Process.get(iPro -1).pid,list_Process.get(iPro -1).name,list_Process.get(iPro -1).state,list_Process.get(iPro -1).ID_now,list_Process.get(iPro -1).all_ins});
+    public void addList_Process(int pidPro, String namePro, Process.ProcessStates statePro, int ID_nowPro, int all_insPro) {
+        list_Process.add(new KeyValuePair_Process(pidPro, namePro, statePro, ID_nowPro, all_insPro));
+        tableModel_Pro.addRow(new Object[]{list_Process.get(iPro - 1).pid, list_Process.get(iPro - 1).name, list_Process.get(iPro - 1).state, list_Process.get(iPro - 1).ID_now, list_Process.get(iPro - 1).all_ins});
         iPro++;
     }
 
     public void subList_Process(int pidPro) {
         for (int j = 0; j < list_Process.size(); j++) {
-            if(pidPro ==list_Process.get(j).pid){
+            if (pidPro == list_Process.get(j).pid) {
                 list_Process.remove(j);
                 tableModel_Pro.removeRow(j);
                 iPro--;
@@ -369,9 +371,9 @@ public class GUI extends JFrame {
         }
     }
 
-    public void modList_Process(int pidPro, String namePro, Process.ProcessStates statePro, int ID_nowPro, int all_insPro){
+    public void modList_Process(int pidPro, String namePro, Process.ProcessStates statePro, int ID_nowPro, int all_insPro) {
         for (int j = 0; j < list_Process.size(); j++) {
-            if(pidPro == list_Process.get(j).pid){
+            if (pidPro == list_Process.get(j).pid) {
                 list_Process.get(j).name = namePro;
                 list_Process.get(j).state = statePro;
                 list_Process.get(j).ID_now = ID_nowPro;
@@ -383,15 +385,15 @@ public class GUI extends JFrame {
         list_Process();
     }
 
-    public void addList_Memory(String nameMem, String typeMem, int sizeMem, String countMem, int pidMem, int uidMem){
-        list_Memory.add(new KeyValuePair_Memory(nameMem,typeMem,sizeMem,countMem,pidMem,uidMem));
-        tableModel_Mem.addRow(new Object[]{list_Memory.get(iMem -1).name,list_Memory.get(iMem -1).type,list_Memory.get(iMem -1).size,list_Memory.get(iMem -1).count,list_Memory.get(iMem -1).pid,list_Memory.get(iMem -1).uid});
+    public void addList_Memory(String nameMem, String typeMem, int sizeMem, String countMem, int pidMem, int uidMem) {
+        list_Memory.add(new KeyValuePair_Memory(nameMem, typeMem, sizeMem, countMem, pidMem, uidMem));
+        tableModel_Mem.addRow(new Object[]{list_Memory.get(iMem - 1).name, list_Memory.get(iMem - 1).type, list_Memory.get(iMem - 1).size, list_Memory.get(iMem - 1).count, list_Memory.get(iMem - 1).pid, list_Memory.get(iMem - 1).uid});
         iMem++;
     }
 
-    public void subList_Memory(int uidMem){
+    public void subList_Memory(int uidMem) {
         for (int j = 0; j < list_Memory.size(); j++) {
-            if(uidMem ==list_Memory.get(j).uid){
+            if (uidMem == list_Memory.get(j).uid) {
                 list_Memory.remove(j);
                 tableModel_Mem.removeRow(j);
                 iMem--;
@@ -400,9 +402,9 @@ public class GUI extends JFrame {
         }
     }
 
-    public void modList_Memory(String countMem, int uidMem){
+    public void modList_Memory(String countMem, int uidMem) {
         for (int j = 0; j < list_Memory.size(); j++) {
-            if(uidMem == list_Memory.get(j).uid){
+            if (uidMem == list_Memory.get(j).uid) {
                 list_Memory.get(j).count = countMem;
                 break;
             }
@@ -411,15 +413,15 @@ public class GUI extends JFrame {
         list_Memory();
     }
 
-    public void addList_IO(String nameIO, String stateIO){
-        list_IO.add(new KeyValuePair_IO(nameIO,stateIO));
-        tableModel_IO.addRow(new Object[]{list_IO.get(iIO -1).name,list_IO.get(iIO -1).state});
+    public void addList_IO(String nameIO, String stateIO) {
+        list_IO.add(new KeyValuePair_IO(nameIO, stateIO));
+        tableModel_IO.addRow(new Object[]{list_IO.get(iIO - 1).name, list_IO.get(iIO - 1).state});
         iIO++;
     }
 
-    public void subList_IO(String nameIO){
+    public void subList_IO(String nameIO) {
         for (int j = 0; j < list_IO.size(); j++) {
-            if(nameIO.equals(list_IO.get(j).name)){
+            if (nameIO.equals(list_IO.get(j).name)) {
                 list_IO.remove(j);
                 tableModel_IO.removeRow(j);
                 iIO--;
@@ -428,9 +430,9 @@ public class GUI extends JFrame {
         }
     }
 
-    public void modList_IO(String nameIO, String stateIO){
+    public void modList_IO(String nameIO, String stateIO) {
         for (int j = 0; j < list_IO.size(); j++) {
-            if(nameIO.equals(list_IO.get(j).name)){
+            if (nameIO.equals(list_IO.get(j).name)) {
                 list_IO.get(j).state = stateIO;
                 break;
             }

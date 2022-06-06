@@ -12,10 +12,8 @@ public class VarPartition {
     public VarPartition(int size, String varType) {
         this.size = size;
         type = varType;
-        if (type.equals("Int"))
-            value = "0";
-        else
-            value = "";
+        if (type.equals("Int")) value = "0";
+        else value = "";
     }
 
     public String getType() {

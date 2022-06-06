@@ -1,6 +1,7 @@
 package team.os.memoryManager;
 
-import java.util.*;
+import java.util.List;
+import java.util.Scanner;
 
 public class TestMemory {
     public static void main(String[] args) {
