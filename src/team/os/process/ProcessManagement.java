@@ -4,6 +4,7 @@ import team.os.global.Global;
 import team.os.instruction.InstructionSet;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public final class ProcessManagement implements IProcessManagement {
     public static class Message {
@@ -27,6 +28,37 @@ public final class ProcessManagement implements IProcessManagement {
         }
     } //格式化消息，用于进程间通信
 
+    private final class Lock {
+        private final ArrayDeque<Process.PCB> lockBlockQueue;
+        private int value;
+
+        private Lock(int value) {
+            lockBlockQueue = new ArrayDeque<>();
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void take() {
+            if (value == 0) {
+                lockBlockQueue.offer(runningProcess);
+            } else {
+                if (!lockBlockQueue.contains(runningProcess))
+                    value--;
+            }
+        }
+
+        public void put() {
+            if (value == 0) {
+                lockBlockQueue.poll();
+            } else {
+                value++;
+            }
+        }
+    }
+
     private int processNumber; //当前系统中进程数,用于产生pid，因此是一个只增值，不允许减少
     private final Map<Integer, Process.PCB> processTable; //系统进程表
     private Process.PCB runningProcess; //当前处于running状态进程
@@ -34,6 +66,7 @@ public final class ProcessManagement implements IProcessManagement {
     private final List<Process.PCB> blockQueue; //当前阻塞队列
     private final List<Process.PCB> suspendQueue; //当前挂起队列
     private final List<Message> mailBox; //邮箱，用于进程间通信
+    private final Lock lock;
 
     private static final ProcessManagement instance = new ProcessManagement();
 
@@ -45,6 +78,7 @@ public final class ProcessManagement implements IProcessManagement {
         blockQueue = new LinkedList<>();
         mailBox = new LinkedList<>();
         suspendQueue = new LinkedList<>();
+        lock = new Lock(0);
     }
 
     /**
@@ -270,6 +304,21 @@ public final class ProcessManagement implements IProcessManagement {
         for (Process.PCB pcb : readyQueue) {
             pcb.setIsExecuted(false);
         }
+    }
+
+    @Override
+    public int getProductNumber() {
+        return lock.getValue();
+    }
+
+    @Override
+    public void addProduct() {
+        lock.put();
+    }
+
+    @Override
+    public void subProduct() {
+        lock.take();
     }
 
     public int getProcessNumber() {

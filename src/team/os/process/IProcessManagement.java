@@ -58,4 +58,20 @@ public interface IProcessManagement {
      * @param coreNumber 核心数
      */
     void singleRoundExecution(int coreNumber);
+
+    /**
+     * 获取仓库中产品数量
+     * @return 仓库中产品数量
+     */
+    int getProductNumber();
+
+    /**
+     * 向仓库中添加产品
+     */
+    void addProduct();
+
+    /**
+     * 从仓库中拿走产品
+     */
+    void subProduct();
 }
