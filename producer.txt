@@ -1,4 +1,9 @@
+CreateProcess p1 consumer.txt
+CreateProcess p2 consumer.txt
+CreateProcess p3 consumer.txt
+CreateProcess p4 consumer.txt
 GetProductNum
+Block 5
 AddProduct
 AddProduct
 GetProductNum

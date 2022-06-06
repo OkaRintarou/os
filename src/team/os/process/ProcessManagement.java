@@ -44,8 +44,10 @@ public final class ProcessManagement implements IProcessManagement {
             if (value == 0) {
                 lockBlockQueue.offer(runningProcess);
             } else {
-                if (!lockBlockQueue.contains(runningProcess))
+                if (!lockBlockQueue.contains(runningProcess)) {
                     value--;
+                    Global.INSTANCE.getGui().print("Get product from pid: " + runningProcess.getPid());
+                }
             }
         }
 

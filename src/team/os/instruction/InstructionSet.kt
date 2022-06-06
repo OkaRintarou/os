@@ -64,7 +64,6 @@ class InstructionSet(
                     "GetProductNum" -> GetProductNum(pcb, gb)
                     "AddProduct" -> AddProduct(pcb, gb)
                     "SubProduct" -> SubProduct(pcb, gb)
-                    "CheckProduct" -> CheckProduct(pcb, gb)
                     "SendMsg" -> SendMsg(pcb, gb, it[1], it[2])
                     "GetMsg" -> GetMsg(pcb, gb)
                     "Block" -> Block(pcb, gb, it[1].toInt())
