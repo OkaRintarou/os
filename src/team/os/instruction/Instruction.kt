@@ -49,21 +49,14 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
 
     class AddProduct(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
         override fun invoke() {
-            gb.pm.addProduct()
             Global.gui.print("Add product from pid: ${pcb.pid}")
+            gb.pm.addProduct()
         }
     }
 
     class SubProduct(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
         override fun invoke() {
             gb.pm.subProduct()
-            Global.gui.print("Request to sub product from pid: ${pcb.pid}")
-        }
-    }
-
-    class CheckProduct(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
-        override fun invoke() {
-            Global.gui.print("Get product from pid: ${pcb.pid}")
         }
     }
 

@@ -50,8 +50,9 @@ public final class ProcessManagement implements IProcessManagement {
         }
 
         public void put() {
-            if (value == 0) {
-                lockBlockQueue.poll();
+            if (lockBlockQueue.size() != 0) {
+                Process.PCB poll = lockBlockQueue.poll();
+                Global.INSTANCE.getGui().print("Get product from pid: " + poll.getPid());
             } else {
                 value++;
             }
