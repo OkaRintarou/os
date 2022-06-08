@@ -17,6 +17,7 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
 
     /**
      * 创建进程
+     * @property name 进程名
      * @property filePath 文件路径，非物理路径
      */
     class CreateProcess(pcb: PCB, gb: GlobalModules, private val name: String, private val filePath: String) :
@@ -32,7 +33,6 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
      * 终止指定进程
      * @property name 被终止的进程名
      *
-     * @param pcb PCB
      */
     class KillProcess(pcb: PCB, gb: GlobalModules, private val name: String) : Instruction(pcb, gb) {
         override fun invoke() {
@@ -40,6 +40,9 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         }
     }
 
+    /**
+     * 获取信号量数值
+     */
     class GetProductNum(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
         override fun invoke() {
             val productNumber = gb.pm.productNumber
@@ -47,6 +50,10 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         }
     }
 
+    /**
+     * 增加信号量
+     *
+     */
     class AddProduct(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
         override fun invoke() {
             Global.gui.print("Add product from pid: ${pcb.pid}")
@@ -54,6 +61,9 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         }
     }
 
+    /**
+     * 减少信号量
+     */
     class SubProduct(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
         override fun invoke() {
             gb.pm.subProduct()
@@ -61,14 +71,10 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
     }
 
     /**
-     * Send msg
+     * 向指定进程发送消息
      *
-     * @property dName
-     * @property msg
-     * @constructor
-     *
-     * @param pcb
-     * @param gb
+     * @property dName 目的进程名
+     * @property msg 消息内容
      */
     class SendMsg(pcb: PCB, gb: GlobalModules, private val dName: String, private val msg: String) :
         Instruction(pcb, gb) {
@@ -77,6 +83,10 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         }
     }
 
+    /**
+     * 获取当前进程的所有消息
+     *
+     */
     class GetMsg(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
         override fun invoke() {
             val msgs = pcb.process.showAllMessage()
@@ -86,6 +96,11 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         }
     }
 
+    /**
+     * 阻塞当前进程
+     *
+     * @property cycle 周期数
+     */
     class Block(pcb: PCB, gb: GlobalModules, private val cycle: Int) : Instruction(pcb, gb) {
         override fun invoke() {
             gb.pm.blockProcess(cycle)
@@ -95,16 +110,13 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
 
     /**
      * 申请外设
-     * @property type 外设类型
      *
-     * @param pcb PCB
+     * @property type 外设类别
+     * @property varName 保存传输内容的变量名
+     * @property taskID 任务id，可随意指定
      */
     class HwAccess(
-        pcb: PCB,
-        gb: GlobalModules,
-        private val type: String,
-        private val varName: String,
-        private val taskID: String
+        pcb: PCB, gb: GlobalModules, private val type: String, private val varName: String, private val taskID: String
     ) : Instruction(pcb, gb) {
         override fun invoke() {
             if (type == "keyboard") {
@@ -124,15 +136,15 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
                 return
             }
             gb.tmpIntMap[taskID] = list[0]
-            if (list.size == 2)
-                gb.pm.blockProcess(list[1])
+            if (list.size == 2) gb.pm.blockProcess(list[1])
         }
     }
 
     /**
      * 释放外设
      *
-     * @param pcb PCB
+     * @property type 外设类别
+     * @property taskID 任务id
      */
     class HwRelease(pcb: PCB, gb: GlobalModules, private val type: String, private val taskID: String) :
         Instruction(pcb, gb) {
@@ -143,20 +155,14 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
 
     /**
      * 声明变量
-     * 隐式转换为内存申请
-     * @property name 变量名
-     * @property size 变量大小
      *
-     * @param pcb PCB
+     * @property name 变量名
+     * @property type 变量类型
+     * @property size 变量大小
      */
     class VarDeclare(
-        pcb: PCB,
-        gb: GlobalModules,
-        private val name: String,
-        private val type: String,
-        private val size: Int
-    ) :
-        Instruction(pcb, gb) {
+        pcb: PCB, gb: GlobalModules, private val name: String, private val type: String, private val size: Int
+    ) : Instruction(pcb, gb) {
         override fun invoke() {
             gb.mm.varDeclare(pcb.pid, name, type, size).let {
                 gb.variables[name] = it
@@ -166,30 +172,23 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
 
 
     /**
-     * 打印变量
-     * 内存访问会隐式转换为地址
-     * 同时可作为读取使用
-     * @property name 变量名称
+     * 读取变量，默认打印
      *
-     * @param pcb PCB
+     * @property name 变量名
+     * @property type 变量类别
+     * @property out 是否打印
      */
     class VarPrint(
-        pcb: PCB,
-        gb: GlobalModules,
-        private val name: String,
-        private val type: String,
-        private val out: Boolean = true
-    ) :
-        Instruction(pcb, gb) {
+        pcb: PCB, gb: GlobalModules, private val name: String, private val type: String, private val out: Boolean = true
+    ) : Instruction(pcb, gb) {
         override fun invoke() {
-            if (name[0] != '$')
-                gb.mm.run {
-                    when (type) {
-                        "String" -> gb.tmpStrMap[name] = varReadString(pcb.pid, name)
-                        "Int" -> gb.tmpIntMap[name] = varReadInt(pcb.pid, name)
-                        else -> throw Exception("Invalid varPrint type!")
-                    }
+            if (name[0] != '$') gb.mm.run {
+                when (type) {
+                    "String" -> gb.tmpStrMap[name] = varReadString(pcb.pid, name)
+                    "Int" -> gb.tmpIntMap[name] = varReadInt(pcb.pid, name)
+                    else -> throw Exception("Invalid varPrint type!")
                 }
+            }
             if (out) Global.gui.print(
                 when (type) {
                     "String" -> gb.tmpStrMap[name]
@@ -202,17 +201,13 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
 
     /**
      * 写入变量
-     * @property name 变量名
-     * @property value 值，正常为字符串，若以$开头则为整形
      *
-     * @param pcb PCB
+     * @property name 变量名
+     * @property value 变量值
+     * @property type 变量类型
      */
     class VarWrite(
-        pcb: PCB,
-        gb: GlobalModules,
-        private val name: String,
-        private val value: String,
-        private val type: String
+        pcb: PCB, gb: GlobalModules, private val name: String, private val value: String, private val type: String
     ) : Instruction(pcb, gb) {
         override fun invoke() {
             when (type) {
@@ -225,10 +220,10 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
 
     /**
      * 整形加法
-     * @property o1 变量1
-     * @property o2 变量2
      *
-     * @param pcb PCB
+     * @property o1 加数1
+     * @property o2 加数2
+     * @property o3 和
      */
     class Add(pcb: PCB, gb: GlobalModules, private val o1: String, private val o2: String, private val o3: String) :
         Instruction(pcb, gb) {
@@ -241,11 +236,11 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
     }
 
     /**
-     * 字符串连接
-     * 只能对已有变量添加常量字符串
-     * @property o1 变量名
+     * 字符串拼接
      *
-     * @param pcb PCB
+     * @property o1 字符串1
+     * @property o2 字符串2
+     * @property o3 结果
      */
     class StrCat(pcb: PCB, gb: GlobalModules, private val o1: String, private val o2: String, private val o3: String) :
         Instruction(pcb, gb) {
@@ -257,6 +252,12 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         }
     }
 
+    /**
+     * 字符串转整形
+     *
+     * @property o1 源字符串
+     * @property o2 目的整形
+     */
     class StrToInt(pcb: PCB, gb: GlobalModules, private val o1: String, private val o2: String) : Instruction(pcb, gb) {
         override fun invoke() {
             VarPrint(pcb, gb, o1, "String", false)()
@@ -265,6 +266,12 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         }
     }
 
+    /**
+     * 整形转字符串
+     *
+     * @property o1 整形
+     * @property o2 目的字符串
+     */
     class IntToStr(pcb: PCB, gb: GlobalModules, private val o1: String, private val o2: String) : Instruction(pcb, gb) {
         override fun invoke() {
             VarPrint(pcb, gb, o1, "Int", false)()
@@ -274,9 +281,8 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
     }
 
     /**
-     * 创建文件
+     * 创建文件，不可同时创建文件夹
      *
-     * @param pcb PCB
      * @property name 文件名
      */
     class FileCreate(pcb: PCB, gb: GlobalModules, private val name: String) : Instruction(pcb, gb) {
@@ -285,12 +291,22 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
         }
     }
 
+    /**
+     * 创建文件夹
+     *
+     * @property name 文件夹名
+     */
     class FolderCreate(pcb: PCB, gb: GlobalModules, private val name: String) : Instruction(pcb, gb) {
         override fun invoke() {
             gb.fs.folderCreate(name)
         }
     }
 
+    /**
+     * 删除文件夹
+     *
+     * @property name 文件夹名
+     */
     class FolderDelete(pcb: PCB, gb: GlobalModules, private val name: String) : Instruction(pcb, gb) {
         override fun invoke() {
             gb.fs.folderDelete(name)
@@ -298,10 +314,10 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
     }
 
     /**
-     * 写入文件，直接覆盖
-     * @property filename 文件名
+     * 写入文件
      *
-     * @param pcb PCB
+     * @property filename 文件名
+     * @property varName 待写入变量
      */
     class FileWrite(pcb: PCB, gb: GlobalModules, private val filename: String, private val varName: String) :
         Instruction(pcb, gb) {
@@ -319,9 +335,8 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
 
     /**
      * 删除文件
-     * @property name 文件名
      *
-     * @param pcb PCB
+     * @property name 文件名
      */
     class FileDelete(pcb: PCB, gb: GlobalModules, private val name: String) : Instruction(pcb, gb) {
         override fun invoke() {
@@ -331,17 +346,13 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
 
     /**
      * 读文件
-     * @property filename 文件名
-     * @property size 读取大小
      *
-     * @param pcb PCB
+     * @property filename 文件名
+     * @property size 读出大小
+     * @property varName 存入变量
      */
     class FileRead(
-        pcb: PCB,
-        gb: GlobalModules,
-        private val filename: String,
-        private val size: Int,
-        private val varName: String
+        pcb: PCB, gb: GlobalModules, private val filename: String, private val size: Int, private val varName: String
     ) : Instruction(pcb, gb) {
         override fun invoke() {
             gb.fs.run {
@@ -361,10 +372,8 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
     }
 
     /**
-     * 调试用指令
-     * 该周期执行从控制台获取的指令
+     * 外部注入指令，可多条
      *
-     * @param pcb PCB
      */
     class Broker(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
         override fun invoke() {
@@ -377,7 +386,8 @@ sealed class Instruction(protected val pcb: PCB, protected val gb: GlobalModules
     /**
      * 当前进程退出
      * 任何非法指令均会翻译为该指令
-     * @param pcb PCB
+     * 因在翻译指令时，Exit一定为进程指令列表的最后一条，
+     * Exit实际不做任何操作
      */
     class Exit(pcb: PCB, gb: GlobalModules) : Instruction(pcb, gb) {
         override fun invoke() {

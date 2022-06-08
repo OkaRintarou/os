@@ -11,6 +11,8 @@ class InsSetFactory(private val gb: GlobalModules) {
     /**
      * 获得一个指令集的实例，该接口由进程初始化时调用
      * @param fileName 文件名，为空串、空白串或null时表示从键盘得到指令
+     * @param pcb 进程的PCB
+     * @param pName 进程名
      * @return 指令集的实例
      */
     fun getInst(fileName: String?, pcb: Process.PCB, pName: String): InstructionSet =

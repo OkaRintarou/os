@@ -24,6 +24,7 @@ import team.os.process.ProcessManagement
  * @property fs 文件管理模块
  * @property mm 内存管理模块
  * @property io 设备管理模块
+ * @property im 中断管理模块
  */
 class GlobalModules(
     val variables: HashMap<String, Int>,
